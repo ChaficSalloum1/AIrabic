@@ -1,77 +1,46 @@
-
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { MobileNav } from '../../components/ui/MobileNav';
-import { Button } from '../../components/ui/Button';
-import { useTouch } from '../../lib/useTouch';
-import { ProgressManager } from '../../lib/localStorage';
-import { getLessonById } from '../../data/lessons';
-import styles from '../../styles/Lesson.module.css';
+import { useEffect, useState } from 'react';
+import { getLessonById, Lesson } from '../../data/lessons';
 
-const LessonPage = () => {
+export default function LessonPage() {
   const router = useRouter();
   const { id } = router.query;
-  const { swipeDirection } = useTouch();
-  const lesson = id ? getLessonById(id as string) : null;
-  
+  const [lesson, setLesson] = useState<Lesson | null>(null);
+
   useEffect(() => {
-    if (swipeDirection === 'left' && lesson?.nextLessonId) {
-      handleNext();
+    if (id) {
+      const foundLesson = getLessonById(id as string);
+      if (foundLesson) {
+        setLesson(foundLesson);
+      } else {
+        setLesson(null);
+      }
     }
-  }, [swipeDirection]);
+  }, [id]);
 
-  const handleNext = () => {
-    if (lesson?.nextLessonId) {
-      ProgressManager.saveProgress(id as string, 100);
-      router.push(`/lessons/${lesson.nextLessonId}`);
-    }
-  };
-
-  if (!lesson) return null;
-
-  const isNextLessonUnlocked = lesson.nextLessonId 
-    ? ProgressManager.isLessonCompleted(id as string)
-    : false;
+  if (!lesson) return <p className="text-center text-red-500">Lesson not found</p>;
 
   return (
-    <div className={styles.lessonContainer}>
-      <MobileNav 
-        title={lesson.title} 
-        onBack={() => router.push('/')} 
-      />
-      
-      <div className={styles.content}>
-        <h1 className={styles.title}>{lesson.title}</h1>
-        <p className={styles.description}>{lesson.description}</p>
-        
-        <div className={styles.mainContent}>
-          <p>{lesson.content}</p>
-          
-          <div className={styles.examples}>
-            <h2>Examples:</h2>
-            {lesson.examples.map((example, index) => (
-              <div key={index} className={styles.example}>
-                {example}
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="text-center p-4">
+      <h1 className="text-2xl font-bold">{lesson.title}</h1>
+      <p className="text-lg">{lesson.description}</p>
+      <p className="mt-4 text-md">{lesson.content}</p>
 
-        <div className={styles.controls}>
-          {lesson.nextLessonId && (
-            <Button 
-              onClick={handleNext}
-              fullWidth 
-              disabled={!isNextLessonUnlocked}
-            >
-              Next Lesson: {getLessonById(lesson.nextLessonId)?.title}
-            </Button>
-          )}
-        </div>
+      <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+        <h2 className="text-lg font-semibold">Examples:</h2>
+        {lesson.examples.map((example, index) => (
+          <p key={index} className="text-md italic">{example}</p>
+        ))}
       </div>
+
+      {lesson.nextLessonId && (
+        <button
+          className="mt-4 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
+          onClick={() => router.push(`/lessons/${lesson.nextLessonId}`)}
+        >
+          Next Lesson →
+        </button>
+      )}
     </div>
   );
-};
-
-export default LessonPage;
+}
