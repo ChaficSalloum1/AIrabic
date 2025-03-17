@@ -10,6 +10,7 @@ export default function LessonPage() {
   const { id } = router.query;
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [showExercise, setShowExercise] = useState(false);
+  const [showExercise, setShowExercise] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -48,17 +49,29 @@ export default function LessonPage() {
 
       {lesson.id === "1" && (
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Practice Exercise</h2>
-          <Recognition
-            question="Which sentence follows the correct Lebanese Arabic word order?"
-            options={[
-              "أنا بحب القهوة",
-              "القهوة أنا بحب ",
-              "بحب أنا القهوة "
-            ]}
-            correctAnswer="أنا بحب القهوة"
-            onCorrect={handleExerciseComplete}
-          />
+          <h2 className="text-xl font-bold mb-4">Practice Exercises</h2>
+          <div className="space-y-8">
+            <Recognition
+              question="Which sentence follows the correct Lebanese Arabic word order?"
+              options={[
+                "أنا بحب القهوة",
+                "القهوة أنا بحب ",
+                "بحب أنا القهوة "
+              ]}
+              correctAnswer="أنا بحب القهوة"
+              onCorrect={() => setShowExercise(true)}
+            />
+            
+            {showExercise && (
+              <FillBlank
+                prompt="Complete the sentence: ___ بحب القهوة"
+                options={["أنا", "نحن", "هي"]}
+                answer="أنا"
+                hint="This word means 'I' in Lebanese Arabic"
+                onCorrect={handleExerciseComplete}
+              />
+            )}
+          </div>
         </div>
       )}
 

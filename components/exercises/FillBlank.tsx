@@ -1,56 +1,66 @@
 
 import React, { useState } from 'react';
-import { Exercise } from '../../data/exercises';
-import { Button } from '../ui/Button';
 import styles from './Exercise.module.css';
 
 interface Props {
-  exercise: Exercise;
-  onComplete: (correct: boolean) => void;
+  prompt: string;
+  options: string[];
+  answer: string;
+  hint?: string;
+  onCorrect: () => void;
 }
 
-export const FillBlank: React.FC<Props> = ({ exercise, onComplete }) => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+export const FillBlank: React.FC<Props> = ({ prompt, options, answer, hint, onCorrect }) => {
+  const [input, setInput] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [showHint, setShowHint] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const handleSubmit = () => {
-    const correct = selectedOption === exercise.answer;
-    if (correct) {
-      onComplete(true);
+    if (input.trim().toLowerCase() === answer.toLowerCase()) {
+      setIsCorrect(true);
+      onCorrect();
     } else {
-      setAttempts(prev => prev + 1);
-      if (attempts >= 2) {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      
+      if (newAttempts === 2) {
         setShowHint(true);
+      } else if (newAttempts === 3) {
+        setShowAnswer(true);
       }
     }
   };
 
-  const parts = exercise.prompt.split('___');
-
   return (
     <div className={styles.exercise}>
       <div className={styles.fillBlankPrompt} dir="rtl">
-        {parts[0]}
-        <select 
-          value={selectedOption}
-          onChange={(e) => setSelectedOption(e.target.value)}
-          className={styles.select}
-        >
-          <option value="">Select...</option>
-          {exercise.options?.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        {parts[1]}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className={`${styles.input} ${isCorrect ? styles.correct : ''}`}
+          placeholder="Type your answer..."
+          disabled={isCorrect}
+        />
+        {prompt.replace('___', '')}
       </div>
-      <Button onClick={handleSubmit} fullWidth>
+      
+      <button 
+        onClick={handleSubmit}
+        className={`${styles.button} ${isCorrect ? styles.correct : ''}`}
+        disabled={isCorrect}
+      >
         Check Answer
-      </Button>
-      {showHint && exercise.hint && (
-        <div className={styles.hint}>Hint: {exercise.hint}</div>
+      </button>
+
+      {showHint && hint && !isCorrect && (
+        <div className={styles.hint}>Hint: {hint}</div>
+      )}
+      
+      {showAnswer && !isCorrect && (
+        <div className={styles.answer}>The correct answer is: {answer}</div>
       )}
     </div>
   );
