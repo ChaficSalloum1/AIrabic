@@ -44,3 +44,31 @@
   border-radius: 8px;
   min-width: 120px;
 }
+
+.arrangement {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.arrangedWords, .availableWords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 50px;
+  padding: 1rem;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+}
+
+.wordButton {
+  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+}
+
+.reinforcement {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+}
