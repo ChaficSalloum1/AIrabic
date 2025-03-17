@@ -10,7 +10,7 @@ export default function LessonPage() {
   const { id } = router.query;
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [showExercise, setShowExercise] = useState(false);
-  const [showExercise, setShowExercise] = useState(false);
+  const [showArrangement, setShowArrangement] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -68,6 +68,14 @@ export default function LessonPage() {
                 options={["أنا", "نحن", "هي"]}
                 answer="أنا"
                 hint="This word means 'I' in Lebanese Arabic"
+                onCorrect={() => setShowArrangement(true)}
+              />
+            )}
+            
+            {showArrangement && (
+              <SentenceArrangement
+                words={["القهوة", "بحب", "أنا"]}
+                correctAnswer="أنا بحب القهوة"
                 onCorrect={handleExerciseComplete}
               />
             )}
