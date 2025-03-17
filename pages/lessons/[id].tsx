@@ -52,11 +52,11 @@ export default function LessonPage() {
           <Recognition
             question="Which sentence follows the correct Lebanese Arabic word order?"
             options={[
-              "أنا بحب القهوة (I love coffee)",
-              "القهوة أنا بحب (Coffee I love)",
-              "بحب أنا القهوة (Love I coffee)"
+              "أنا بحب القهوة",
+              "القهوة أنا بحب ",
+              "بحب أنا القهوة "
             ]}
-            correctAnswer="أنا بحب القهوة (I love coffee)"
+            correctAnswer="أنا بحب القهوة"
             onCorrect={handleExerciseComplete}
           />
         </div>
