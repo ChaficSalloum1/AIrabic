@@ -3,11 +3,20 @@ import styles from "./Exercise.module.css";
 
 interface Props {
   words: string[];
-  correctOrder: string[];
+  correctAnswer: string[]; // Corrected to array
   onCorrect: () => void;
 }
 
-export const SentenceArrangement: React.FC<Props> = ({ words, correctOrder, onCorrect }) => {
+//interface DragResult { // Unused interface removed
+//  destination?: {
+//    index: number;
+//  };
+//  source: {
+//    index: number;
+//  };
+//}
+
+export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onCorrect }) => {
   const [currentOrder, setCurrentOrder] = useState([...words.reverse()]); // Start RTL
 
   const handleDrag = (index: number) => {
@@ -18,7 +27,8 @@ export const SentenceArrangement: React.FC<Props> = ({ words, correctOrder, onCo
   };
 
   const checkAnswer = () => {
-    if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+    // Correct comparison logic: Join array elements into a string for comparison.
+    if (currentOrder.join(" ") === correctAnswer.join(" ")) { 
       onCorrect();
     }
   };

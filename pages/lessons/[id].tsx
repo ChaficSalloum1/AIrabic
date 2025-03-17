@@ -38,8 +38,29 @@ export default function LessonPage() {
     ProgressManager.saveCompletedExercise(lesson.id, exerciseType);
   };
 
-  if (!lesson)
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (id) {
+      const foundLesson = getLessonById(id as string);
+      if (foundLesson) {
+        setLesson(foundLesson);
+        setCompletedExercises(
+          ProgressManager.getCompletedExercises(foundLesson.id),
+        );
+      }
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  if (isLoading) {
+    return <div className="text-center p-4">Loading...</div>;
+  }
+
+  if (!lesson) {
     return <p className="text-center text-red-500">Lesson not found</p>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-4">
