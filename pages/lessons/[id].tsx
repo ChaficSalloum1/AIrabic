@@ -24,7 +24,7 @@ export default function LessonPage() {
 
   const handleExerciseComplete = () => {
     if (lesson?.nextLessonId) {
-      ProgressManager.saveProgress(lesson.id, 100);
+      ProgressManager.saveExerciseProgress(lesson.id, 'recognition');
       setTimeout(() => {
         router.push(`/lessons/${lesson.nextLessonId}`);
       }, 1500);
