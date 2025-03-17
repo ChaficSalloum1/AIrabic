@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getLessonById, Lesson } from '../../data/lessons';
 import { Recognition } from '../../components/exercises/Recognition';
+import { FillBlank } from '../../components/exercises/FillBlank';
+import { SentenceArrangement } from '../../components/exercises/SentenceArrangement';
 import { ProgressManager } from '../../lib/localStorage';
 
 export default function LessonPage() {
