@@ -25,6 +25,7 @@ export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onC
   };
 
   const checkAnswer = (items: string[]) => {
+    // For RTL, we need to join from right to left
     const currentAnswer = items.join(' ');
     if (currentAnswer === correctAnswer) {
       setIsCorrect(true);
@@ -33,8 +34,8 @@ export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onC
   };
 
   return (
-    <div className={styles.exercise}>
-      <h3 className={styles.prompt}>Arrange the words in the correct order:</h3>
+    <div className={styles.exercise} dir="rtl">
+      <h3 className={styles.prompt}>رتب الكلمات في الترتيب الصحيح:</h3>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="words" direction="horizontal">
           {(provided) => (
@@ -42,6 +43,7 @@ export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onC
               {...provided.droppableProps}
               ref={provided.innerRef}
               className={`${styles.arrangementArea} ${isCorrect ? styles.correct : ''}`}
+              dir="rtl"
             >
               {arrangedWords.map((word, index) => (
                 <Draggable key={word} draggableId={word} index={index}>
@@ -51,6 +53,7 @@ export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onC
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       className={styles.draggableWord}
+                      dir="rtl"
                     >
                       {word}
                     </div>
