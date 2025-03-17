@@ -1,10 +1,15 @@
 
 const STORAGE_KEY = 'lebanese_arabic_progress';
 
-interface LessonProgress {
+interface ExerciseProgress {
   id: string;
   completed: boolean;
-  score: number;
+}
+
+interface LessonProgress {
+  id: string;
+  exerciseProgress: ExerciseProgress[];
+  completed: boolean;
 }
 
 export const ProgressManager = {
@@ -14,18 +19,39 @@ export const ProgressManager = {
     return stored ? JSON.parse(stored) : [];
   },
 
-  saveProgress: (lessonId: string, score: number) => {
+  saveExerciseProgress: (lessonId: string, exerciseId: string) => {
     if (typeof window === 'undefined') return;
     const progress = ProgressManager.getProgress();
-    const existingIndex = progress.findIndex(p => p.id === lessonId);
+    const lessonIndex = progress.findIndex(p => p.id === lessonId);
     
-    if (existingIndex >= 0) {
-      progress[existingIndex] = { id: lessonId, completed: true, score };
+    if (lessonIndex >= 0) {
+      const exerciseProgress = progress[lessonIndex].exerciseProgress || [];
+      if (!exerciseProgress.some(ep => ep.id === exerciseId)) {
+        exerciseProgress.push({ id: exerciseId, completed: true });
+      }
+      progress[lessonIndex].exerciseProgress = exerciseProgress;
+      progress[lessonIndex].completed = ProgressManager.checkLessonCompleted(lessonId);
     } else {
-      progress.push({ id: lessonId, completed: true, score });
+      progress.push({
+        id: lessonId,
+        exerciseProgress: [{ id: exerciseId, completed: true }],
+        completed: false
+      });
     }
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  },
+
+  checkLessonCompleted: (lessonId: string): boolean => {
+    const exercises = getExercisesByLessonId(lessonId);
+    const progress = ProgressManager.getProgress();
+    const lessonProgress = progress.find(p => p.id === lessonId);
+    
+    if (!lessonProgress?.exerciseProgress) return false;
+    
+    return exercises.every(exercise => 
+      lessonProgress.exerciseProgress.some(ep => ep.id === exercise.id)
+    );
   },
 
   isLessonCompleted: (lessonId: string): boolean => {
