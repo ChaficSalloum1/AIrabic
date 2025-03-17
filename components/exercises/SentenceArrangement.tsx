@@ -1,70 +1,41 @@
-
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import styles from './Exercise.module.css';
+import React, { useState } from "react";
+import styles from "./Exercise.module.css";
 
 interface Props {
   words: string[];
-  correctAnswer: string;
+  correctOrder: string[];
   onCorrect: () => void;
 }
 
-export const SentenceArrangement: React.FC<Props> = ({ words, correctAnswer, onCorrect }) => {
-  const [arrangedWords, setArrangedWords] = useState(words);
-  const [isCorrect, setIsCorrect] = useState(false);
+export const SentenceArrangement: React.FC<Props> = ({ words, correctOrder, onCorrect }) => {
+  const [currentOrder, setCurrentOrder] = useState([...words.reverse()]); // Start RTL
 
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
-
-    const items = Array.from(arrangedWords);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setArrangedWords(items);
-    checkAnswer(items);
+  const handleDrag = (index: number) => {
+    const newOrder = [...currentOrder];
+    const draggedWord = newOrder.splice(index, 1)[0];
+    newOrder.unshift(draggedWord); // Move word to the right (RTL logic)
+    setCurrentOrder(newOrder);
   };
 
-  const checkAnswer = (items: string[]) => {
-    // For RTL, we need to join from right to left
-    const currentAnswer = items.join(' ');
-    if (currentAnswer === correctAnswer) {
-      setIsCorrect(true);
+  const checkAnswer = () => {
+    if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
       onCorrect();
     }
   };
 
   return (
     <div className={styles.exercise} dir="rtl">
-      <h3 className={styles.prompt}>رتب الكلمات في الترتيب الصحيح:</h3>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="words" direction="horizontal">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className={`${styles.arrangementArea} ${isCorrect ? styles.correct : ''}`}
-              dir="rtl"
-            >
-              {arrangedWords.map((word, index) => (
-                <Draggable key={word} draggableId={word} index={index}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={styles.draggableWord}
-                      dir="rtl"
-                    >
-                      {word}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <h3>Arrange the words in the correct order:</h3>
+      <div className={styles.sentenceArrangement}>
+        {currentOrder.map((word, index) => (
+          <span key={index} draggable onDragEnd={() => handleDrag(index)} className={styles.word}>
+            {word}
+          </span>
+        ))}
+      </div>
+      <button onClick={checkAnswer} className={styles.button}>
+        Check Answer
+      </button>
     </div>
   );
 };
