@@ -1,6 +1,7 @@
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { MobileNav } from '../../components/ui/MobileNav';
 import { Button } from '../../components/ui/Button';
 import { useTouch } from '../../lib/useTouch';
@@ -27,29 +28,47 @@ const LessonPage = () => {
     }
   };
 
-  const handleBack = () => {
-    router.back();
-  };
-
   if (!lesson) return null;
+
+  const isNextLessonUnlocked = lesson.nextLessonId 
+    ? ProgressManager.isLessonCompleted(id as string)
+    : false;
 
   return (
     <div className={styles.lessonContainer}>
-      <MobileNav title={lesson.title} onBack={handleBack} />
+      <MobileNav 
+        title={lesson.title} 
+        onBack={() => router.push('/')} 
+      />
       
-      <div className={styles.content} dir="rtl">
-        <p className={styles.explanation}>{lesson.explanation}</p>
-        <div className={styles.example}>{lesson.example}</div>
-      </div>
+      <div className={styles.content}>
+        <h1 className={styles.title}>{lesson.title}</h1>
+        <p className={styles.description}>{lesson.description}</p>
+        
+        <div className={styles.mainContent}>
+          <p>{lesson.content}</p>
+          
+          <div className={styles.examples}>
+            <h2>Examples:</h2>
+            {lesson.examples.map((example, index) => (
+              <div key={index} className={styles.example}>
+                {example}
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div className={styles.controls}>
-        <Button 
-          onClick={handleNext} 
-          fullWidth 
-          disabled={!ProgressManager.isLessonCompleted(id as string)}
-        >
-          Next Lesson
-        </Button>
+        <div className={styles.controls}>
+          {lesson.nextLessonId && (
+            <Button 
+              onClick={handleNext}
+              fullWidth 
+              disabled={!isNextLessonUnlocked}
+            >
+              Next Lesson: {getLessonById(lesson.nextLessonId)?.title}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
