@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import styles from './Exercise.module.css';
+import React, { useState, useEffect } from "react";
+import styles from "./Exercise.module.css";
 
 interface Props {
   words: string[];
@@ -9,11 +8,11 @@ interface Props {
   hint?: string;
 }
 
-export const SentenceConstruction: React.FC<Props> = ({
+const SentenceConstruction: React.FC<Props> = ({
   words,
   correctAnswer,
   onCorrect,
-  hint
+  hint,
 }) => {
   const [availableWords, setAvailableWords] = useState<string[]>([]);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -27,19 +26,19 @@ export const SentenceConstruction: React.FC<Props> = ({
 
   const handleWordSelect = (word: string, index: number) => {
     if (isCorrect) return;
-    
+
     const newAvailable = [...availableWords];
     newAvailable.splice(index, 1);
     setAvailableWords(newAvailable);
     setSelectedWords([...selectedWords, word]);
 
     if (selectedWords.length + 1 === words.length) {
-      const sentence = [...selectedWords, word].join(' ');
+      const sentence = [...selectedWords, word].join(" ");
       if (sentence === correctAnswer) {
         setIsCorrect(true);
         onCorrect();
       } else {
-        setAttempts(prev => prev + 1);
+        setAttempts((prev) => prev + 1);
         if (attempts + 1 >= 2) {
           setShowHint(true);
         }
@@ -54,7 +53,7 @@ export const SentenceConstruction: React.FC<Props> = ({
 
   const handleWordRemove = (word: string, index: number) => {
     if (isCorrect) return;
-    
+
     const newSelected = [...selectedWords];
     newSelected.splice(index, 1);
     setSelectedWords(newSelected);
@@ -79,17 +78,19 @@ export const SentenceConstruction: React.FC<Props> = ({
           {selectedWords.map((word, index) => (
             <button
               key={`selected-${index}`}
-              className={`${styles.wordTile} ${isCorrect ? styles.correct : ''}`}
+              className={`${styles.wordTile} ${
+                isCorrect ? styles.correct : ""
+              }`}
               onClick={() => handleWordRemove(word, index)}
             >
               {word}
             </button>
           ))}
         </div>
-        {showHint && hint && (
-          <div className={styles.hint}>{hint}</div>
-        )}
+        {showHint && hint && <div className={styles.hint}>{hint}</div>}
       </div>
     </div>
   );
 };
+
+export default SentenceConstruction;

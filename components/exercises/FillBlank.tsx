@@ -17,11 +17,8 @@ const FillBlank: React.FC<FillBlankProps> = ({ prompt, answer, hint, onCorrect }
   const [isAnimating, setIsAnimating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Autofocus input when the component mounts
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, []);
 
   const handleSubmit = () => {
@@ -31,26 +28,10 @@ const FillBlank: React.FC<FillBlankProps> = ({ prompt, answer, hint, onCorrect }
       setIsCorrect(true);
       onCorrect();
     } else {
-      setAttempts(prev => prev + 1);
-
-      // Shake animation effect
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 600);
-
-      if (attempts >= 1) {
-        setShowHint(true);
-      } 
-      if (attempts >= 2) {
-        setShowAnswer(true);
-      }
-    }
-  };
-
-  // Handle Enter key for fast input submission
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isCorrect) {
-      handleSubmit();
+      setAttempts((prev) => prev + 1);
+      setTimeout(() => setIsAnimating(false), 600);
+      if (attempts === 2) setShowHint(true);
+      if (attempts === 3) setShowAnswer(true);
     }
   };
 
@@ -58,52 +39,33 @@ const FillBlank: React.FC<FillBlankProps> = ({ prompt, answer, hint, onCorrect }
     <div className={styles.exercise}>
       <div className={styles.fillBlankCard}>
         <div className={styles.fillBlankPrompt} dir="rtl">
-          {prompt.split("___").map((part, index, array) => (
+          {prompt.split("___").map((part, index) => (
             <React.Fragment key={index}>
               <span>{part}</span>
-              {index < array.length - 1 && (
-                <div className={styles.inputWrapper}>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="اكتب هنا..."
-                    disabled={isCorrect}
-                    className={`${styles.fillBlankInput} ${isAnimating && !isCorrect ? styles.shake : ""} ${isCorrect ? styles.correct : ""}`}
-                  />
-                </div>
+              {index < prompt.split("___").length - 1 && (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className={`${styles.fillBlankInput} ${isCorrect ? styles.correct : ""}`}
+                  placeholder="اكتب هنا..."
+                  disabled={isCorrect}
+                />
               )}
             </React.Fragment>
           ))}
         </div>
-
-        {/* Feedback & Hint Section */}
-        {showHint && hint && !isCorrect && (
-          <div className={styles.hintBox}>
-            <span className={styles.hintIcon}>💡</span> {hint}
-          </div>
-        )}
-        {showAnswer && !isCorrect && (
-          <div className={styles.answerBox}>
-            <span className={styles.answerIcon}>✓</span> الصحيح هو: <strong>{answer}</strong>
-          </div>
-        )}
-
-        {/* Button Section */}
-        <div className={styles.buttonContainer}>
-          <button
-            onClick={handleSubmit}
-            disabled={isCorrect || input.trim() === ""}
-            className={`${styles.primaryButton} ${isCorrect ? styles.correctButton : ""}`}
-          >
-            {isCorrect ? "✔️ صحيح!" : "تحقق من الإجابة"}
-          </button>
-        </div>
       </div>
+
+      <button onClick={handleSubmit} className={styles.primaryButton} disabled={isCorrect}>
+        {isCorrect ? "Correct! ✓" : "Check Answer"}
+      </button>
+
+      {showHint && hint && <div className={styles.hintBox}>💡 {hint}</div>}
+      {showAnswer && <div className={styles.answerBox}>Correct answer: {answer}</div>}
     </div>
   );
 };
 
-export default FillBlank; // ✅ Ensure it's a default export
+export default FillBlank;

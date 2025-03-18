@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getLessonById, Lesson } from "../../data/lessons";
 import MultipleChoice from "../../components/exercises/MultipleChoice";
-import FillBlank from "../../components/exercises/FillBlank"; // ✅ Fixed Import
+import FillBlank from "../../components/exercises/FillBlank";
 import SentenceArrangement from "../../components/exercises/SentenceArrangement";
 import SentenceConstruction from "../../components/exercises/SentenceConstruction";
 import SentenceTyping from "../../components/exercises/SentenceTyping";
@@ -23,25 +23,34 @@ export default function LessonPage() {
       const foundLesson = getLessonById(id as string);
       if (foundLesson) {
         setLesson(foundLesson);
-        setCompletedExercises(ProgressManager.getCompletedExercises(foundLesson.id));
+        setCompletedExercises(
+          ProgressManager.getCompletedExercises(foundLesson.id) || [],
+        );
       }
       setIsLoading(false);
     }
   }, [id]);
 
   if (isLoading) return <div className="text-center p-4">جار التحميل...</div>;
-  if (!lesson) return <p className="text-center text-red-500">لم يتم العثور على الدرس</p>;
+  if (!lesson)
+    return <p className="text-center text-red-500">لم يتم العثور على الدرس</p>;
 
-  // ✅ Handles marking the current exercise as completed
+  // ✅ Handle exercise completion
   const handleExerciseComplete = () => {
     setWaitingForNext(true);
   };
 
-  // ✅ Moves to the next exercise when "Next" is clicked
+  // ✅ Move to the next exercise
   const handleNext = () => {
     setWaitingForNext(false);
-    setCompletedExercises([...completedExercises, lesson.exercises[currentExerciseIndex].type]);
-    ProgressManager.saveCompletedExercise(lesson.id, lesson.exercises[currentExerciseIndex].type);
+    setCompletedExercises([
+      ...completedExercises,
+      lesson.exercises[currentExerciseIndex].type,
+    ]);
+    ProgressManager.saveCompletedExercise(
+      lesson.id,
+      lesson.exercises[currentExerciseIndex].type,
+    );
 
     if (currentExerciseIndex < lesson.exercises.length - 1) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
@@ -65,32 +74,66 @@ export default function LessonPage() {
 
       <h2 className="text-xl font-bold mb-4">تمارين</h2>
 
-      {/* ✅ Only show the current exercise if it exists */}
-      {lesson?.exercises?.length > 0 && lesson.exercises[currentExerciseIndex] && (
-        <div className="mb-6">
-          {lesson.exercises[currentExerciseIndex].type === "MultipleChoice" && (
-            <MultipleChoice {...lesson.exercises[currentExerciseIndex]} onCorrect={handleExerciseComplete} />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "FillBlank" && (
-            <FillBlank {...lesson.exercises[currentExerciseIndex]} onCorrect={handleExerciseComplete} />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
-            <SentenceArrangement {...lesson.exercises[currentExerciseIndex]} onCorrect={handleExerciseComplete} />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
-            <SentenceConstruction {...lesson.exercises[currentExerciseIndex]} onCorrect={handleExerciseComplete} />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceTyping" && (
-            <SentenceTyping {...lesson.exercises[currentExerciseIndex]} onCorrect={handleExerciseComplete} />
-          )}
+      {/* ✅ Only show the current exercise */}
+      {lesson?.exercises?.length > 0 &&
+        lesson.exercises[currentExerciseIndex] && (
+          <div className="mb-6">
+            {lesson.exercises[currentExerciseIndex].type ===
+              "MultipleChoice" && (
+              <MultipleChoice
+                {...lesson.exercises[currentExerciseIndex]}
+                onCorrect={handleExerciseComplete}
+              />
+            )}
+            {lesson.exercises[currentExerciseIndex].type === "FillBlank" && (
+              <FillBlank
+                {...lesson.exercises[currentExerciseIndex]}
+                onCorrect={handleExerciseComplete}
+              />
+            )}
+            {lesson.exercises[currentExerciseIndex].type ===
+              "SentenceArrangement" && (
+              <SentenceArrangement
+                {...lesson.exercises[currentExerciseIndex]}
+                onCorrect={handleExerciseComplete}
+              />
+            )}
+            {lesson.exercises[currentExerciseIndex].type ===
+              "SentenceConstruction" && (
+              <SentenceConstruction
+                {...lesson.exercises[currentExerciseIndex]}
+                onCorrect={handleExerciseComplete}
+              />
+            )}
+            {lesson.exercises[currentExerciseIndex].type ===
+              "SentenceTyping" && (
+              <SentenceTyping
+                {...lesson.exercises[currentExerciseIndex]}
+                onCorrect={handleExerciseComplete}
+              />
+            )}
 
-          {waitingForNext && (
-            <button className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600" onClick={handleNext}>
-              التالي →
-            </button>
-          )}
-        </div>
-      )}
+            {waitingForNext && (
+              <button
+                className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
+                onClick={handleNext}
+              >
+                التالي →
+              </button>
+            )}
+          </div>
+        )}
+
+      {/* ✅ Show "Next Lesson" button only when all exercises are completed */}
+      {lesson.nextLessonId &&
+        completedExercises.length === lesson.exercises.length && (
+          <button
+            className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
+            onClick={() => router.push(`/lessons/${lesson.nextLessonId}`)}
+          >
+            Next Lesson →
+          </button>
+        )}
     </div>
   );
 }
