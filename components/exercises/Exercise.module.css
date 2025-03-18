@@ -1,12 +1,232 @@
+/* Exercise.module.css - Streamlined for MVP Performance */
+
+/* ===== Base Container Styles ===== */
 .exercise {
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
+/* ===== Typography ===== */
+.prompt {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1f2937;
+  text-align: right;
+  margin: 0;
+}
+
+.hint {
+  background-color: #fef3c7;
+  border-left: 3px solid #f59e0b;
+  color: #92400e;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.hintIcon {
+  margin-right: 0.5rem;
+}
+
+/* ===== Buttons ===== */
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.primaryButton, .secondaryButton {
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.primaryButton {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.secondaryButton {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.secondaryButton:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.disabledButton {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.correctButton {
+  background-color: #10b981;
+}
+
+/* ===== Feedback States ===== */
+.correct {
+  background-color: #dcfce7 !important;
+  border-color: #10b981 !important;
+  color: #047857 !important;
+}
+
+.incorrect {
+  background-color: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1b !important;
+}
+
+.feedbackSection {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.feedbackSection.visible {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 0.75rem;
+}
+
+.feedback {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.successMessage {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #d1fae5;
+  color: #047857;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+/* ===== Multiple Choice ===== */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  font-size: 1rem;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.option:hover:not(:disabled) {
+  border-color: #3b82f6;
+}
+
+/* ===== Fill in the Blank ===== */
+.fillBlankCard {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+.fillBlankPrompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.inputWrapper {
+  display: inline-flex;
+  margin: 0 0.25rem;
+  position: relative;
+}
+
+.fillBlankInput {
+  padding: 0.625rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 2px solid #cbd5e1;
+  background-color: white;
+  color: #1f2937;
+  text-align: center;
+  min-width: 100px;
+  width: 100%;
+}
+
+.fillBlankInput:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+.hintBox, .answerBox {
+  padding: 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.hintBox {
+  background-color: #fef3c7;
+  border-left: 3px solid #f59e0b;
+  color: #92400e;
+  margin-bottom: 0.75rem;
+}
+
+.answerBox {
+  background-color: #f1f5f9;
+  border-left: 3px solid #64748b;
+  color: #334155;
+}
+
+.answerIcon {
+  margin-right: 0.5rem;
+}
+
+/* ===== Sentence Construction ===== */
 .constructionContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 1rem;
 }
 
 .wordBank {
@@ -15,6 +235,9 @@
   gap: 0.5rem;
   justify-content: center;
   min-height: 60px;
+  background-color: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 8px;
 }
 
 .constructedSentence {
@@ -22,369 +245,130 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   min-height: 60px;
-  padding: 1rem;
-  border: 2px dashed #ccc;
+  padding: 0.75rem;
+  border: 2px dashed #cbd5e1;
   border-radius: 8px;
-  justify-content: flex-start;
+  justify-content: center;
+  background-color: white;
 }
 
 .wordTile {
-  padding: 0.75rem 1rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #e5e7eb;
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
   cursor: pointer;
   font-size: 1rem;
-  transition: all 0.2s ease;
-  touch-action: manipulation;
+  transition: background-color 0.2s;
+  user-select: none;
 }
 
 .wordTile:hover {
-  background-color: #d1d5db;
+  background-color: #f1f5f9;
 }
 
 .wordTile.correct {
-  background-color: #34d399;
+  background-color: #10b981;
   color: white;
+  border-color: #059669;
 }
 
-.hint {
-  color: #6b7280;
-  font-size: 0.875rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.exercise {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.prompt {
-  font-size: 1.5rem;
-  text-align: center;
-  margin: 0;
-}
-
-.options {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.option {
-  font-size: 1.25rem;
-  padding: 1.5rem;
-}
-
-.hint {
-  padding: 1rem;
-  background: #fef3c7;
-  border-radius: 8px;
-  color: #92400e;
-}
-
-.fillBlankPrompt {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.select {
-  font-size: 1.25rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  min-width: 120px;
-}
-
-.arrangement {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.arrangedWords, .availableWords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-height: 50px;
-  padding: 1rem;
-  border: 2px dashed #e5e7eb;
-  border-radius: 8px;
-}
-
-.wordButton {
-  font-size: 1.25rem;
-  padding: 0.5rem 1rem;
-}
-
-.reinforcement {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #e5e7eb;
-  border-radius: 8px;
-}
-
-.question {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.option {
-  width: 100%;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 1.1rem;
-}
-
-.option:hover {
-  background: #f3f4f6;
-}
-
-.correct {
-  background: #dcfce7 !important;
-  border-color: #22c55e;
-  color: #166534;
-}
-
-.incorrect {
-  background: #fee2e2 !important;
-  border-color: #ef4444;
-  color: #991b1b;
-}
-
+/* ===== Sentence Arrangement ===== */
 .arrangementArea {
   display: flex;
-  flex-direction: row-reverse;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.75rem;
   min-height: 80px;
-  border: 2px dashed #e5e7eb;
+  border: 2px dashed #cbd5e1;
   border-radius: 8px;
-  margin: 1rem 0;
+  margin: 0.75rem 0;
+  justify-content: center;
+  background-color: white;
+}
+
+/* ===== Sentence Typing ===== */
+.typingInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
   text-align: right;
 }
 
-.draggableWord {
-  padding: 0.5rem 1rem;
-  background: #f3f4f6;
-  border-radius: 6px;
-  cursor: move;
-  user-select: none;
-  font-size: 1.1rem;
-}
-
-.input {
-  padding: 0.5rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  margin-right: 0.5rem;
-  direction: rtl;
-}
-
-.button {
-  padding: 0.75rem 1.5rem;
-  background: #4b5563;
-  color: white;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.button:hover {
-  background: #374151;
-}
-
-.answer {
-  padding: 1rem;
-  background: #f3f4f6;
-  border-radius: 8px;
-  text-align: center;
-  color: #374151;
-}
-
-.feedback {
-  text-align: center;
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 8px;
-  font-weight: bold;
-}
-/* Add these styles to your Exercise.module.css file */
-
-/* Fill in the blank styles */
-.fillBlankCard {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
-}
-
-.fillBlankPrompt {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 16px;
-  font-weight: 500;
-  color: #1f2937;
-}
-
-.inputWrapper {
-  display: inline-block;
-  margin: 0 4px;
-  vertical-align: middle;
-}
-
-.fillBlankInput {
-  padding: 8px 16px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: 2px solid #d1d5db;
+.typingInput:focus {
+  border-color: #3b82f6;
   outline: none;
-  background-color: white;
-  color: #1f2937;
-  text-align: center;
-  min-width: 120px;
-  transition: all 0.2s ease;
 }
 
-.fillBlankInput.correct {
-  border-color: #10b981;
-  background-color: #ecfdf5;
-  color: #047857;
-}
-
-.feedbackSection {
-  font-size: 16px;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  max-height: 0;
-  opacity: 0;
-}
-
-.feedbackSection.visible {
-  max-height: 200px;
-  opacity: 1;
-}
-
-.hintBox {
-  background-color: #fffbeb;
-  border: 1px solid #fbbf24;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  color: #92400e;
-  display: flex;
-  align-items: center;
-}
-
-.hintIcon {
-  margin-right: 8px;
-}
-
-.answerBox {
-  background-color: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  padding: 12px;
-  border-radius: 8px;
-  color: #334155;
-  display: flex;
-  align-items: center;
-}
-
-.answerIcon {
-  margin-right: 8px;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.primaryButton {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.primaryButton:hover:not(:disabled) {
-  background-color: #2563eb;
-}
-
-.correctButton {
-  background-color: #10b981;
-  cursor: default;
-}
-
-.disabledButton {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.secondaryButton {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #f1f5f9;
-  color: #64748b;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.secondaryButton:hover {
-  background-color: #e2e8f0;
-}
-
-.successMessage {
-  margin-top: 16px;
-  text-align: center;
-  padding: 12px;
-  border-radius: 8px;
-  background-color: #ecfdf5;
-  color: #047857;
-  font-weight: 600;
-  animation: fadeIn 0.5s ease;
-}
-
+/* ===== Animations - Only Essential ===== */
 .shake {
-  animation: shake 0.5s;
+  animation: shake 0.4s;
 }
 
-/* Keyframe animations */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ===== Progress Bar - Simple ===== */
+.progressBar {
+  height: 4px;
+  background-color: #e2e8f0;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #3b82f6;
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+/* ===== RTL Support ===== */
+[dir="rtl"] .hint,
+[dir="rtl"] .hintBox,
+[dir="rtl"] .answerBox {
+  border-left: none;
+  border-right: 3px solid;
+  text-align: right;
+}
+
+[dir="rtl"] .hintIcon,
+[dir="rtl"] .answerIcon {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+/* Simple word translation tooltip */
+.wordTranslation {
+  position: absolute;
+  background-color: #f8fafc;
+  color: #475569;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Accessibility - simpler version that won't cause errors */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
