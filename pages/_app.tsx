@@ -1,7 +1,8 @@
 
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import ErrorBoundary from '../components/ErrorBoundary';
+import { ErrorBoundary } from '../components/ErrorBoundary';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
