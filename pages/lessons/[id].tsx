@@ -4,6 +4,7 @@ import { getLessonById, Lesson } from "../../data/lessons";
 import { Recognition } from "../../components/exercises/Recognition";
 import { FillBlank } from "../../components/exercises/FillBlank";
 import { SentenceArrangement } from "../../components/exercises/SentenceArrangement";
+import { SentenceConstruction } from "../../components/exercises/SentenceConstruction";
 import { ProgressManager } from "../../lib/localStorage";
 
 export default function LessonPage() {
@@ -91,7 +92,15 @@ export default function LessonPage() {
     onCorrect={handleExerciseComplete}
   />
 )}
-{lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
+{lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
+            <SentenceConstruction
+              words={lesson.exercises[currentExerciseIndex].options}
+              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
             <SentenceArrangement
               words={lesson.exercises[currentExerciseIndex].options}
               correctAnswer={lesson.exercises[currentExerciseIndex].answer}

@@ -48,6 +48,13 @@ export const lessons: Lesson[] = [
         options: ["القهوة", "بحب", "أنا"],
         answer: "أنا بحب القهوة",
       },
+      {
+        type: "SentenceConstruction",
+        prompt: "Build the sentence: 'I love coffee'",
+        options: ["أنا", "بحب", "القهوة"],
+        answer: "أنا بحب القهوة",
+        hint: "Start with 'I' (أنا), then add the verb 'love' (بحب), and end with 'coffee' (القهوة)",
+      },
     ],
     nextLessonId: "2",
   },

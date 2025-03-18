@@ -1,6 +1,7 @@
+
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import ErrorBoundary from '../components/ErrorBoundary'; // Make sure this path is correct
+import ErrorBoundary from '../components/ErrorBoundary';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
