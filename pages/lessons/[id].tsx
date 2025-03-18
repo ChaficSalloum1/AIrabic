@@ -17,7 +17,6 @@ export default function LessonPage() {
   const [waitingForNext, setWaitingForNext] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ Load lesson data when the ID changes
   useEffect(() => {
     if (id) {
       const foundLesson = getLessonById(id as string);
@@ -29,22 +28,53 @@ export default function LessonPage() {
     }
   }, [id]);
 
+  const handleExerciseComplete = () => {
+    setWaitingForNext(true);
+  };
+
+  const handleNext = () => {
+    if (!lesson) return;
+
+    setWaitingForNext(false);
+    const currentExercise = lesson.exercises[currentExerciseIndex];
+    setCompletedExercises(prev => [...prev, currentExercise.type]);
+    ProgressManager.saveCompletedExercise(lesson.id, currentExercise.type);
+
+    if (currentExerciseIndex < lesson.exercises.length - 1) {
+      setCurrentExerciseIndex(prev => prev + 1);
+    }
+  };
+
   if (isLoading) return <div className="text-center p-4">Loading...</div>;
   if (!lesson) return <p className="text-center text-red-500">Lesson not found</p>;
 
-  // ✅ Handles marking the current exercise as completed
-  const handleExerciseComplete = () => {
-    setWaitingForNext(true); // ✅ Show "Next" button before transitioning
-  };
+  const currentExercise = lesson.exercises[currentExerciseIndex];
 
-  // ✅ Moves to the next exercise when "Next" is clicked
-  const handleNext = () => {
-    setWaitingForNext(false);
-    setCompletedExercises([...completedExercises, lesson.exercises[currentExerciseIndex].type]);
-    ProgressManager.saveCompletedExercise(lesson.id, lesson.exercises[currentExerciseIndex].type);
+  const renderExercise = () => {
+    if (!currentExercise) return null;
 
-    if (currentExerciseIndex < lesson.exercises.length - 1) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    switch (currentExercise.type) {
+      case "MultipleChoice":
+        return <MultipleChoice {...currentExercise} onCorrect={handleExerciseComplete} />;
+
+      case "FillBlank":
+        return <FillBlank {...currentExercise} onCorrect={handleExerciseComplete} />;
+
+      case "SentenceArrangement":
+        return <SentenceArrangement {...currentExercise} onCorrect={handleExerciseComplete} />;
+
+      case "SentenceConstruction":
+        return <SentenceConstruction {...currentExercise} onCorrect={handleExerciseComplete} />;
+
+      case "SentenceTyping":
+        return <SentenceTyping {...currentExercise} onCorrect={handleExerciseComplete} />;
+
+      default:
+        return (
+          <div className="text-center text-red-500 p-4">
+            Unknown exercise type: {currentExercise.type}
+          </div>
+        );
     }
   };
 
@@ -65,94 +95,19 @@ export default function LessonPage() {
 
       <h2 className="text-xl font-bold mb-4">Practice Exercises</h2>
 
-      {/* ✅ Only show the current exercise if it exists */}
-      {lesson?.exercises?.length > 0 && lesson.exercises[currentExerciseIndex] && (
-        <div className="mb-6">
-          {lesson.exercises[currentExerciseIndex].type === "MultipleChoice" && (
-            <MultipleChoice
-              question={lesson.exercises[currentExerciseIndex].prompt}
-              options={lesson.exercises[currentExerciseIndex].options}
-              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "FillBlank" && (
-            <FillBlank
-              prompt={lesson.exercises[currentExerciseIndex].prompt}
-              options={lesson.exercises[currentExerciseIndex].options}
-              answer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
-            <SentenceArrangement
-              words={lesson.exercises[currentExerciseIndex].options}
-              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
-            <SentenceConstruction
-              words={lesson.exercises[currentExerciseIndex].options}
-              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceTyping" && (
-            <SentenceTyping
-              prompt={lesson.exercises[currentExerciseIndex].prompt}
-              answer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "construction" && (
-  <SentenceConstruction
-    words={lesson.exercises[currentExerciseIndex].options}
-    correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-    hint={lesson.exercises[currentExerciseIndex].hint}
-    onCorrect={handleExerciseComplete}
-  />
-)}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
-            <SentenceConstruction
-              words={lesson.exercises[currentExerciseIndex].options}
-              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
-            <SentenceArrangement
-              words={lesson.exercises[currentExerciseIndex].options}
-              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceTyping" && (
-            <SentenceTyping
-              prompt={lesson.exercises[currentExerciseIndex].prompt}
-              answer={lesson.exercises[currentExerciseIndex].answer}
-              hint={lesson.exercises[currentExerciseIndex].hint}
-              onCorrect={handleExerciseComplete}
-            />
-          )}
-          {/* ✅ Show "Next" button only when waitingForNext is true */}
-          {waitingForNext && (
-            <button
-              className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
-              onClick={handleNext}
-            >
-              Next →
-            </button>
-          )}
-        </div>
-      )}
+      <div className="mb-6">
+        {renderExercise()}
 
-      {/* ✅ Show "Next Lesson" button only when all exercises are completed */}
+        {waitingForNext && (
+          <button
+            className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
+            onClick={handleNext}
+          >
+            Next →
+          </button>
+        )}
+      </div>
+
       {lesson.nextLessonId && completedExercises.length === lesson.exercises.length && (
         <button
           className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
