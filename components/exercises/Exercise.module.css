@@ -167,3 +167,168 @@
   border-radius: 8px;
   font-weight: bold;
 }
+/* Add these styles to your Exercise.module.css file */
+
+/* Fill in the blank styles */
+.fillBlankCard {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.fillBlankPrompt {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.inputWrapper {
+  display: inline-block;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.fillBlankInput {
+  padding: 8px 16px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid #d1d5db;
+  outline: none;
+  background-color: white;
+  color: #1f2937;
+  text-align: center;
+  min-width: 120px;
+  transition: all 0.2s ease;
+}
+
+.fillBlankInput.correct {
+  border-color: #10b981;
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+.feedbackSection {
+  font-size: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+}
+
+.feedbackSection.visible {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.hintBox {
+  background-color: #fffbeb;
+  border: 1px solid #fbbf24;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+}
+
+.hintIcon {
+  margin-right: 8px;
+}
+
+.answerBox {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 12px;
+  border-radius: 8px;
+  color: #334155;
+  display: flex;
+  align-items: center;
+}
+
+.answerIcon {
+  margin-right: 8px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.primaryButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.correctButton {
+  background-color: #10b981;
+  cursor: default;
+}
+
+.disabledButton {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.secondaryButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.secondaryButton:hover {
+  background-color: #e2e8f0;
+}
+
+.successMessage {
+  margin-top: 16px;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #ecfdf5;
+  color: #047857;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease;
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+/* Keyframe animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

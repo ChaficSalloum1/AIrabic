@@ -11,56 +11,40 @@ export default function LessonPage() {
   const { id } = router.query;
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
-  const [waitingForNext, setWaitingForNext] = useState(false); // ✅ Must be inside the component
-
-  useEffect(() => {
-    if (id) {
-      const foundLesson = getLessonById(id as string);
-      if (foundLesson) {
-        setLesson(foundLesson);
-        setCompletedExercises(
-          ProgressManager.getCompletedExercises(foundLesson.id),
-        );
-      }
-    }
-  }, [id]);
-
-  const handleExerciseComplete = (exerciseType: string) => {
-    if (!completedExercises.includes(exerciseType)) {
-      setWaitingForNext(true); // ✅ Show "Next" button before removing exercise
-    }
-  };
-
-  const handleNext = (exerciseType: string) => {
-    setWaitingForNext(false); // ✅ Reset the waiting state
-    const newCompleted = [...completedExercises, exerciseType];
-    setCompletedExercises(newCompleted);
-    ProgressManager.saveCompletedExercise(lesson.id, exerciseType);
-  };
-
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [waitingForNext, setWaitingForNext] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // ✅ Load lesson data when the ID changes
   useEffect(() => {
-    setIsLoading(true);
     if (id) {
       const foundLesson = getLessonById(id as string);
       if (foundLesson) {
         setLesson(foundLesson);
-        setCompletedExercises(
-          ProgressManager.getCompletedExercises(foundLesson.id),
-        );
+        setCompletedExercises(ProgressManager.getCompletedExercises(foundLesson.id));
       }
       setIsLoading(false);
     }
   }, [id]);
 
-  if (isLoading) {
-    return <div className="text-center p-4">Loading...</div>;
-  }
+  if (isLoading) return <div className="text-center p-4">Loading...</div>;
+  if (!lesson) return <p className="text-center text-red-500">Lesson not found</p>;
 
-  if (!lesson) {
-    return <p className="text-center text-red-500">Lesson not found</p>;
-  }
+  // ✅ Handles marking the current exercise as completed
+  const handleExerciseComplete = () => {
+    setWaitingForNext(true); // ✅ Show "Next" button before transitioning
+  };
+
+  // ✅ Moves to the next exercise when "Next" is clicked
+  const handleNext = () => {
+    setWaitingForNext(false);
+    setCompletedExercises([...completedExercises, lesson.exercises[currentExerciseIndex].type]);
+    ProgressManager.saveCompletedExercise(lesson.id, lesson.exercises[currentExerciseIndex].type);
+
+    if (currentExerciseIndex < lesson.exercises.length - 1) {
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -78,57 +62,56 @@ export default function LessonPage() {
       </div>
 
       <h2 className="text-xl font-bold mb-4">Practice Exercises</h2>
-      {lesson.exercises.map((exercise, index) => {
-        if (completedExercises.includes(exercise.type)) return null; // Hide completed exercises
-        return (
-          <div key={index} className="mb-6">
-            {exercise.type === "Recognition" && (
-              <Recognition
-                question={exercise.prompt}
-                options={exercise.options}
-                correctAnswer={exercise.answer}
-                onCorrect={() => handleExerciseComplete(exercise.type)}
-              />
-            )}
-            {exercise.type === "FillBlank" && (
-              <FillBlank
-                prompt={exercise.prompt}
-                options={exercise.options}
-                answer={exercise.answer}
-                hint={exercise.hint}
-                onCorrect={() => handleExerciseComplete(exercise.type)}
-              />
-            )}
-            {exercise.type === "SentenceArrangement" && (
-              <SentenceArrangement
-                words={exercise.options}
-                correctAnswer={exercise.answer}
-                onCorrect={() => handleExerciseComplete(exercise.type)}
-              />
-            )}
 
-            {/* ✅ Show "Next" button when waitingForNext is true */}
-            {waitingForNext && (
-              <button
-                className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
-                onClick={() => handleNext(exercise.type)}
-              >
-                Next →
-              </button>
-            )}
-          </div>
-        );
-      })}
+      {/* ✅ Only show the current exercise */}
+      {lesson.exercises.length > 0 && (
+        <div className="mb-6">
+          {lesson.exercises[currentExerciseIndex].type === "Recognition" && (
+            <Recognition
+              question={lesson.exercises[currentExerciseIndex].prompt}
+              options={lesson.exercises[currentExerciseIndex].options}
+              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "FillBlank" && (
+            <FillBlank
+              prompt={lesson.exercises[currentExerciseIndex].prompt}
+              options={lesson.exercises[currentExerciseIndex].options}
+              answer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
+            <SentenceArrangement
+              words={lesson.exercises[currentExerciseIndex].options}
+              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
 
-      {lesson.nextLessonId &&
-        completedExercises.length === lesson.exercises.length && (
-          <button
-            className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
-            onClick={() => router.push(`/lessons/${lesson.nextLessonId}`)}
-          >
-            Next Lesson →
-          </button>
-        )}
+          {/* ✅ Show "Next" button only when waitingForNext is true */}
+          {waitingForNext && (
+            <button
+              className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
+              onClick={handleNext}
+            >
+              Next →
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ✅ Show "Next Lesson" button only when all exercises are completed */}
+      {lesson.nextLessonId && completedExercises.length === lesson.exercises.length && (
+        <button
+          className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
+          onClick={() => router.push(`/lessons/${lesson.nextLessonId}`)}
+        >
+          Next Lesson →
+        </button>
+      )}
     </div>
   );
 }

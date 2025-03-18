@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./Exercise.module.css";
 
 interface Props {
@@ -19,14 +19,33 @@ export const FillBlank: React.FC<Props> = ({
   const [showHint, setShowHint] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input on component mount
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  // Shake animation class
+  const shakeClass = isAnimating && !isCorrect ? styles.shake : "";
 
   const handleSubmit = () => {
+    setIsAnimating(true);
+
     if (input.trim().toLowerCase() === answer.toLowerCase()) {
       setIsCorrect(true);
       onCorrect();
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
+
+      // Remove shake effect after animation completes
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 600);
 
       if (newAttempts === 2) {
         setShowHint(true);
@@ -36,40 +55,85 @@ export const FillBlank: React.FC<Props> = ({
     }
   };
 
+  // Handle Enter key press
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isCorrect) {
+      handleSubmit();
+    }
+  };
+
   return (
     <div className={styles.exercise}>
-      <div className={styles.fillBlankPrompt} dir="rtl">
-        {prompt.split("___").map((part, index, array) => (
-          <React.Fragment key={index}>
-            {part}
-            {index < array.length - 1 && (
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className={`${styles.input} ${isCorrect ? styles.correct : ""}`}
-                placeholder="Type here..."
-                disabled={isCorrect}
-              />
-            )}
-          </React.Fragment>
-        ))}
+      {/* Prompt section */}
+      <div className={styles.fillBlankCard}>
+        <div className={styles.fillBlankPrompt} dir="rtl">
+          {prompt.split("___").map((part, index, array) => (
+            <React.Fragment key={index}>
+              <span>{part}</span>
+              {index < array.length - 1 && (
+                <div className={styles.inputWrapper}>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="اكتب هنا..."
+                    disabled={isCorrect}
+                    className={`${styles.fillBlankInput} ${shakeClass} ${isCorrect ? styles.correct : ""}`}
+                  />
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Feedback section */}
+        <div className={`${styles.feedbackSection} ${(showHint && hint) || showAnswer ? styles.visible : ""}`}>
+          {showHint && hint && !isCorrect && (
+            <div className={styles.hintBox}>
+              <span className={styles.hintIcon}>💡</span>
+              <span>{hint}</span>
+            </div>
+          )}
+
+          {showAnswer && !isCorrect && (
+            <div className={styles.answerBox}>
+              <span className={styles.answerIcon}>✓</span>
+              <span>The correct answer is: <strong>{answer}</strong></span>
+            </div>
+          )}
+        </div>
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className={`${styles.button} ${isCorrect ? styles.correct : ""}`}
-        disabled={isCorrect}
-      >
-        Check Answer
-      </button>
+      {/* Button section */}
+      <div className={styles.buttonContainer}>
+        <button
+          onClick={handleSubmit}
+          disabled={isCorrect || input.trim() === ""}
+          className={`${styles.primaryButton} ${isCorrect ? styles.correctButton : ""} ${input.trim() === "" ? styles.disabledButton : ""}`}
+        >
+          {isCorrect ? "Correct! ✓" : "Check Answer"}
+        </button>
 
-      {showHint && hint && !isCorrect && (
-        <div className={styles.hint}>Hint: {hint}</div>
-      )}
+        {attempts > 0 && !isCorrect && (
+          <button
+            onClick={() => {
+              setInput(answer);
+              setShowAnswer(true);
+            }}
+            className={styles.secondaryButton}
+          >
+            Show Answer
+          </button>
+        )}
+      </div>
 
-      {showAnswer && !isCorrect && (
-        <div className={styles.answer}>The correct answer is: {answer}</div>
+      {/* Success message */}
+      {isCorrect && (
+        <div className={styles.successMessage}>
+          Great job! 🎉
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,3 @@
-
 export interface Lesson {
   id: string;
   title: string;
@@ -10,7 +9,11 @@ export interface Lesson {
 }
 
 export interface Exercise {
-  type: "Recognition" | "FillBlank" | "SentenceArrangement" | "SentenceConstruction";
+  type:
+    | "Recognition"
+    | "FillBlank"
+    | "SentenceArrangement"
+    | "SentenceConstruction";
   prompt: string;
   options?: string[];
   answer: string;
@@ -27,26 +30,27 @@ export const lessons: Lesson[] = [
     exercises: [
       {
         type: "Recognition",
-        prompt: "Which sentence follows the correct Lebanese Arabic word order?",
+        prompt:
+          "Which sentence follows the correct Lebanese Arabic word order?",
         options: ["أنا بحب القهوة", "القهوة أنا بحب", "بحب أنا القهوة"],
-        answer: "أنا بحب القهوة"
+        answer: "أنا بحب القهوة",
       },
       {
         type: "FillBlank",
         prompt: "Complete the sentence: ___ بحب القهوة",
         options: ["أنا", "نحن", "هي"],
         answer: "أنا",
-        hint: "This word means 'I' in Lebanese Arabic"
+        hint: "This word means 'I' in Lebanese Arabic",
       },
       {
         type: "SentenceArrangement",
         prompt: "Arrange the words in the correct order:",
         options: ["القهوة", "بحب", "أنا"],
-        answer: "أنا بحب القهوة"
-      }
+        answer: "أنا بحب القهوة",
+      },
     ],
-    nextLessonId: "2"
-  }
+    nextLessonId: "2",
+  },
 ];
 
 export const getLessonById = (id: string): Lesson | undefined => {
