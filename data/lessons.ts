@@ -37,12 +37,6 @@ export const lessons: Lesson[] = [
         answer: "أنا بحب القهوة",
       },
       {
-        type: "SentenceTyping",
-        prompt: "Type the sentence: I love coffee",
-        answer: "أنا بحب القهوة",
-        hint: "Start with 'أنا' (I) then verb 'بحب' (love)",
-      },
-      {
         type: "FillBlank",
         prompt: "Complete the sentence: ___ بحب القهوة",
         options: ["أنا", "نحن", "هي"],
