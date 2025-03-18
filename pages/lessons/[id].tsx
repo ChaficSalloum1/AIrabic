@@ -83,7 +83,15 @@ export default function LessonPage() {
               onCorrect={handleExerciseComplete}
             />
           )}
-          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
+          {lesson.exercises[currentExerciseIndex].type === "construction" && (
+  <SentenceConstruction
+    words={lesson.exercises[currentExerciseIndex].options}
+    correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+    hint={lesson.exercises[currentExerciseIndex].hint}
+    onCorrect={handleExerciseComplete}
+  />
+)}
+{lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
             <SentenceArrangement
               words={lesson.exercises[currentExerciseIndex].options}
               correctAnswer={lesson.exercises[currentExerciseIndex].answer}

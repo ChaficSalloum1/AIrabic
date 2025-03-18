@@ -1,4 +1,3 @@
-
 import { Lesson } from './lessons';
 
 export type ExerciseType = 'recognition' | 'fillBlank' | 'arrangement' | 'construction';

@@ -1,3 +1,59 @@
+.exercise {
+  margin-bottom: 2rem;
+}
+
+.constructionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.wordBank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.constructedSentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 60px;
+  padding: 1rem;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  justify-content: flex-start;
+}
+
+.wordTile {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #e5e7eb;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.wordTile:hover {
+  background-color: #d1d5db;
+}
+
+.wordTile.correct {
+  background-color: #34d399;
+  color: white;
+}
+
+.hint {
+  color: #6b7280;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 1rem;
+}
 
 .exercise {
   padding: 1.5rem;
