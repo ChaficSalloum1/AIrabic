@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getLessonById, Lesson } from "../../data/lessons";
-import { Recognition } from "../../components/exercises/Recognition";
+import MultipleChoice from "../../components/exercises/MultipleChoice";
 import { FillBlank } from "../../components/exercises/FillBlank";
 import { SentenceArrangement } from "../../components/exercises/SentenceArrangement";
 import { SentenceConstruction } from "../../components/exercises/SentenceConstruction";
-import { SentenceTyping } from "../../components/exercises/SentenceTyping"; // Added import
+import { SentenceTyping } from "../../components/exercises/SentenceTyping";
 import { ProgressManager } from "../../lib/localStorage";
 
 export default function LessonPage() {
@@ -65,11 +65,11 @@ export default function LessonPage() {
 
       <h2 className="text-xl font-bold mb-4">Practice Exercises</h2>
 
-      {/* ✅ Only show the current exercise */}
-      {lesson.exercises.length > 0 && (
+      {/* ✅ Only show the current exercise if it exists */}
+      {lesson?.exercises?.length > 0 && lesson.exercises[currentExerciseIndex] && (
         <div className="mb-6">
-          {lesson.exercises[currentExerciseIndex].type === "Recognition" && (
-            <Recognition
+          {lesson.exercises[currentExerciseIndex].type === "MultipleChoice" && (
+            <MultipleChoice
               question={lesson.exercises[currentExerciseIndex].prompt}
               options={lesson.exercises[currentExerciseIndex].options}
               correctAnswer={lesson.exercises[currentExerciseIndex].answer}
