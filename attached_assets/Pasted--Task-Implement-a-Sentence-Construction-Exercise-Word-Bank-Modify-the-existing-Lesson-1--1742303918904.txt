@@ -1,0 +1,52 @@
+📌 **Task: Implement a Sentence Construction Exercise (Word Bank)**
+Modify the existing **Lesson 1** setup to include a **Sentence Construction** exercise where users select words from a **word bank** to form a full sentence.
+
+---
+
+### **✅ Project Structure**
+Ensure the new component follows this directory structure:
+📂 components/ ├── exercises/ │ ├── Recognition.tsx │ ├── FillBlank.tsx │ ├── SentenceArrangement.tsx │ ├── MultipleChoice.tsx │ ├── SentenceConstruction.tsx <-- To be added │ 📂 pages/ ├── lessons/ │ ├── [id].tsx <-- Updated to include SentenceConstruction
+
+markdown
+Copy
+Edit
+---
+
+### **✅ Implementation Requirements**
+1️⃣ **Component Name:** `SentenceConstruction.tsx`  
+   - Users **tap words from a word bank** to arrange them into a correct sentence.  
+   - **Incorrect attempts** show a **hint after 2 wrong tries**.  
+   - **Correct answers turn green**, and the next lesson unlocks.  
+
+2️⃣ **Code Guidelines:**
+   - ✅ **Consistent TypeScript practices** (use strong typing for props).
+   - ✅ **Follow DRY principles** (reuse patterns from SentenceArrangement).
+   - ✅ **Avoid redundant state variables** (simplify state management).
+   - ✅ **Ensure clean, scalable UI** (Mimo-style design with tappable word tiles).
+   - ✅ **Use a flexbox-based layout** (horizontal alignment, avoid stacking).
+
+3️⃣ **Integration in Lesson Page (`pages/lessons/[id].tsx`):**
+   - Ensure the new `SentenceConstruction.tsx` **appears at the correct step** in the lesson flow.
+   - Must **only appear after the previous exercises are completed**.
+   - Ensure `onCorrect` updates progress and unlocks the next lesson.
+
+---
+
+### **✅ Mimo-Style UX Details**
+- **Words should be large, clear, and inside visible tiles**.  
+- **Tappable words should move dynamically to form the sentence**.  
+- **Mobile-first layout:** Ensure **spacing, touch interactivity, and visual clarity**.
+
+---
+
+### **Final Checkpoints**
+Before completion, verify:
+✅ The component correctly **renders a sentence with selectable word tiles**.  
+✅ **Selected words align horizontally** (not stacked vertically).  
+✅ **On correct completion, the next lesson unlocks**.  
+✅ **The component integrates cleanly into the lesson page (`[id].tsx`)**.
+
+---
+
+⚠️ **Important:** **DO NOT** duplicate logic from `SentenceArrangement.tsx`. Instead, **refactor common behaviors into reusable functions if needed**.  
+🚀 **Goal:** Implement **clean, scalable, and intuitive** sentence-building mechanics for MVP success.

@@ -1,7 +1,6 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import ErrorBoundary from '../components/ErrorBoundary';
+import { AppProps } from 'next/app';
 import Head from 'next/head';
+import ErrorBoundary from '../components/ErrorBoundary'; // Make sure this path is correct
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,10 +10,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="theme-color" content="#2563eb" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
-  return (
-    <ErrorBoundary>
-      <Component {...pageProps} />
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
+    </>
   );
 }
 
