@@ -1,19 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./Exercise.module.css";
 
-interface Props {
+interface FillBlankProps {
   prompt: string;
   answer: string;
   hint?: string;
   onCorrect: () => void;
 }
 
-export const FillBlank: React.FC<Props> = ({
-  prompt,
-  answer,
-  hint,
-  onCorrect,
-}) => {
+const FillBlank: React.FC<FillBlankProps> = ({ prompt, answer, hint, onCorrect }) => {
   const [input, setInput] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [showHint, setShowHint] = useState(false);
@@ -22,15 +17,12 @@ export const FillBlank: React.FC<Props> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Focus input on component mount
+  // Autofocus input when the component mounts
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-
-  // Shake animation class
-  const shakeClass = isAnimating && !isCorrect ? styles.shake : "";
 
   const handleSubmit = () => {
     setIsAnimating(true);
@@ -39,23 +31,23 @@ export const FillBlank: React.FC<Props> = ({
       setIsCorrect(true);
       onCorrect();
     } else {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
+      setAttempts(prev => prev + 1);
 
-      // Remove shake effect after animation completes
+      // Shake animation effect
       setTimeout(() => {
         setIsAnimating(false);
       }, 600);
 
-      if (newAttempts === 2) {
+      if (attempts >= 1) {
         setShowHint(true);
-      } else if (newAttempts === 3) {
+      } 
+      if (attempts >= 2) {
         setShowAnswer(true);
       }
     }
   };
 
-  // Handle Enter key press
+  // Handle Enter key for fast input submission
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isCorrect) {
       handleSubmit();
@@ -64,7 +56,6 @@ export const FillBlank: React.FC<Props> = ({
 
   return (
     <div className={styles.exercise}>
-      {/* Prompt section */}
       <div className={styles.fillBlankCard}>
         <div className={styles.fillBlankPrompt} dir="rtl">
           {prompt.split("___").map((part, index, array) => (
@@ -80,7 +71,7 @@ export const FillBlank: React.FC<Props> = ({
                     onKeyDown={handleKeyDown}
                     placeholder="اكتب هنا..."
                     disabled={isCorrect}
-                    className={`${styles.fillBlankInput} ${shakeClass} ${isCorrect ? styles.correct : ""}`}
+                    className={`${styles.fillBlankInput} ${isAnimating && !isCorrect ? styles.shake : ""} ${isCorrect ? styles.correct : ""}`}
                   />
                 </div>
               )}
@@ -88,53 +79,31 @@ export const FillBlank: React.FC<Props> = ({
           ))}
         </div>
 
-        {/* Feedback section */}
-        <div className={`${styles.feedbackSection} ${(showHint && hint) || showAnswer ? styles.visible : ""}`}>
-          {showHint && hint && !isCorrect && (
-            <div className={styles.hintBox}>
-              <span className={styles.hintIcon}>💡</span>
-              <span>{hint}</span>
-            </div>
-          )}
-
-          {showAnswer && !isCorrect && (
-            <div className={styles.answerBox}>
-              <span className={styles.answerIcon}>✓</span>
-              <span>The correct answer is: <strong>{answer}</strong></span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Button section */}
-      <div className={styles.buttonContainer}>
-        <button
-          onClick={handleSubmit}
-          disabled={isCorrect || input.trim() === ""}
-          className={`${styles.primaryButton} ${isCorrect ? styles.correctButton : ""} ${input.trim() === "" ? styles.disabledButton : ""}`}
-        >
-          {isCorrect ? "Correct! ✓" : "Check Answer"}
-        </button>
-
-        {attempts > 0 && !isCorrect && (
-          <button
-            onClick={() => {
-              setInput(answer);
-              setShowAnswer(true);
-            }}
-            className={styles.secondaryButton}
-          >
-            Show Answer
-          </button>
+        {/* Feedback & Hint Section */}
+        {showHint && hint && !isCorrect && (
+          <div className={styles.hintBox}>
+            <span className={styles.hintIcon}>💡</span> {hint}
+          </div>
         )}
-      </div>
+        {showAnswer && !isCorrect && (
+          <div className={styles.answerBox}>
+            <span className={styles.answerIcon}>✓</span> الصحيح هو: <strong>{answer}</strong>
+          </div>
+        )}
 
-      {/* Success message */}
-      {isCorrect && (
-        <div className={styles.successMessage}>
-          Great job! 🎉
+        {/* Button Section */}
+        <div className={styles.buttonContainer}>
+          <button
+            onClick={handleSubmit}
+            disabled={isCorrect || input.trim() === ""}
+            className={`${styles.primaryButton} ${isCorrect ? styles.correctButton : ""}`}
+          >
+            {isCorrect ? "✔️ صحيح!" : "تحقق من الإجابة"}
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };
+
+export default FillBlank; // ✅ Ensure it's a default export
