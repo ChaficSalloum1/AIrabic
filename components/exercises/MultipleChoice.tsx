@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Exercise } from '../../data/exercises';
 import { Button } from '../ui/Button';
@@ -9,24 +10,17 @@ interface Props {
 }
 
 export const MultipleChoice: React.FC<Props> = ({ exercise, onComplete }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
   const [showHint, setShowHint] = useState(false);
-  const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
   const handleAnswer = (option: string) => {
-    setSelectedAnswer(option);
-    const isCorrect = option === exercise.answer;
-
-    if (isCorrect) {
-      setFeedback('correct');
-      setTimeout(() => onComplete(true), 1000); // ✅ Progress after a short delay
+    const correct = option === exercise.answer;
+    if (correct) {
+      onComplete(true);
     } else {
-      setFeedback('incorrect');
       setAttempts(prev => prev + 1);
-
-      if (attempts + 1 >= 2) {
-        setShowHint(true); // ✅ Show hint after 2 incorrect attempts
+      if (attempts >= 2) {
+        setShowHint(true);
       }
     }
   };
@@ -40,30 +34,14 @@ export const MultipleChoice: React.FC<Props> = ({ exercise, onComplete }) => {
             key={index}
             onClick={() => handleAnswer(option)}
             fullWidth
-            className={`${styles.option} ${
-              selectedAnswer === option
-                ? feedback === 'correct'
-                  ? styles.correct
-                  : feedback === 'incorrect'
-                    ? styles.incorrect
-                    : ''
-                : ''
-            }`}
-            disabled={!!feedback} // Prevent further clicking after selection
+            className={styles.option}
           >
             {option}
           </Button>
         ))}
       </div>
-
       {showHint && exercise.hint && (
-        <div className={styles.hint}>💡 Hint: {exercise.hint}</div>
-      )}
-
-      {feedback && (
-        <div className={`${styles.feedback} ${feedback === 'correct' ? styles.correct : styles.incorrect}`}>
-          {feedback === 'correct' ? '✅ Correct!' : '❌ Try again'}
-        </div>
+        <div className={styles.hint}>Hint: {exercise.hint}</div>
       )}
     </div>
   );
