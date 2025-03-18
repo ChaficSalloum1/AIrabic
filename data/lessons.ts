@@ -10,7 +10,7 @@ export interface Lesson {
 
 export interface Exercise {
   type:
-    | "Recognition"
+    | "MultipleChoice"
     | "FillBlank"
     | "SentenceArrangement"
     | "SentenceConstruction"
