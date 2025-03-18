@@ -10,7 +10,7 @@ export interface Lesson {
 
 export interface Exercise {
   type:
-    | "MultipleChoice"
+    | "Recognition"
     | "FillBlank"
     | "SentenceArrangement"
     | "SentenceConstruction"
@@ -35,6 +35,12 @@ export const lessons: Lesson[] = [
           "Which sentence follows the correct Lebanese Arabic word order?",
         options: ["أنا بحب القهوة", "القهوة أنا بحب", "بحب أنا القهوة"],
         answer: "أنا بحب القهوة",
+      },
+      {
+        type: "SentenceTyping",
+        prompt: "Type the sentence: I love coffee",
+        answer: "أنا بحب القهوة",
+        hint: "Start with 'أنا' (I) then verb 'بحب' (love)",
       },
       {
         type: "FillBlank",

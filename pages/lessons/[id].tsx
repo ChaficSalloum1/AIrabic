@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getLessonById, Lesson } from "../../data/lessons";
-import { MultipleChoice } from "../../components/exercises/MultipleChoice"; //Replaced Recognition
+import { Recognition } from "../../components/exercises/Recognition";
 import { FillBlank } from "../../components/exercises/FillBlank";
 import { SentenceArrangement } from "../../components/exercises/SentenceArrangement";
 import { SentenceConstruction } from "../../components/exercises/SentenceConstruction";
@@ -68,8 +68,8 @@ export default function LessonPage() {
       {/* ✅ Only show the current exercise */}
       {lesson.exercises.length > 0 && (
         <div className="mb-6">
-          {lesson.exercises[currentExerciseIndex].type === "MultipleChoice" && ( //Replaced Recognition
-            <MultipleChoice //Replaced Recognition
+          {lesson.exercises[currentExerciseIndex].type === "Recognition" && (
+            <Recognition
               question={lesson.exercises[currentExerciseIndex].prompt}
               options={lesson.exercises[currentExerciseIndex].options}
               correctAnswer={lesson.exercises[currentExerciseIndex].answer}
@@ -80,6 +80,30 @@ export default function LessonPage() {
             <FillBlank
               prompt={lesson.exercises[currentExerciseIndex].prompt}
               options={lesson.exercises[currentExerciseIndex].options}
+              answer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "SentenceArrangement" && (
+            <SentenceArrangement
+              words={lesson.exercises[currentExerciseIndex].options}
+              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
+            <SentenceConstruction
+              words={lesson.exercises[currentExerciseIndex].options}
+              correctAnswer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
+          {lesson.exercises[currentExerciseIndex].type === "SentenceTyping" && (
+            <SentenceTyping
+              prompt={lesson.exercises[currentExerciseIndex].prompt}
               answer={lesson.exercises[currentExerciseIndex].answer}
               hint={lesson.exercises[currentExerciseIndex].hint}
               onCorrect={handleExerciseComplete}

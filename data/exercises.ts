@@ -1,6 +1,6 @@
 import { Lesson } from './lessons';
 
-export type ExerciseType = 'multipleChoice' | 'fillBlank' | 'arrangement' | 'construction';
+export type ExerciseType = 'recognition' | 'fillBlank' | 'arrangement' | 'construction';
 
 export interface Exercise {
   id: string;
@@ -19,7 +19,7 @@ export const exercises: Exercise[] = [
   {
     id: "1.1",
     lessonId: "1",
-    type: "multipleChoice",
+    type: "recognition",
     title: "Choose the Correct Order",
     prompt: "Which sentence follows Lebanese Arabic word order?",
     options: [
@@ -45,7 +45,7 @@ export const exercises: Exercise[] = [
   {
     id: "2.1",
     lessonId: "2",
-    type: "multipleChoice",
+    type: "recognition",
     title: "Identify Present Tense",
     prompt: "Which word shows the 'b-' prefix for present tense?",
     options: [
@@ -60,7 +60,7 @@ export const exercises: Exercise[] = [
   {
     id: "3.1",
     lessonId: "3",
-    type: "multipleChoice",
+    type: "recognition",
     title: "Identify Negation",
     prompt: "Which sentence uses the ma...š negation?",
     options: [
