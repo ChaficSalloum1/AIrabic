@@ -5,6 +5,7 @@ import { Recognition } from "../../components/exercises/Recognition";
 import { FillBlank } from "../../components/exercises/FillBlank";
 import { SentenceArrangement } from "../../components/exercises/SentenceArrangement";
 import { SentenceConstruction } from "../../components/exercises/SentenceConstruction";
+import { SentenceTyping } from "../../components/exercises/SentenceTyping"; // Added import
 import { ProgressManager } from "../../lib/localStorage";
 
 export default function LessonPage() {
@@ -92,7 +93,7 @@ export default function LessonPage() {
     onCorrect={handleExerciseComplete}
   />
 )}
-{lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
+          {lesson.exercises[currentExerciseIndex].type === "SentenceConstruction" && (
             <SentenceConstruction
               words={lesson.exercises[currentExerciseIndex].options}
               correctAnswer={lesson.exercises[currentExerciseIndex].answer}
@@ -107,7 +108,14 @@ export default function LessonPage() {
               onCorrect={handleExerciseComplete}
             />
           )}
-
+          {lesson.exercises[currentExerciseIndex].type === "SentenceTyping" && (
+            <SentenceTyping
+              prompt={lesson.exercises[currentExerciseIndex].prompt}
+              answer={lesson.exercises[currentExerciseIndex].answer}
+              hint={lesson.exercises[currentExerciseIndex].hint}
+              onCorrect={handleExerciseComplete}
+            />
+          )}
           {/* ✅ Show "Next" button only when waitingForNext is true */}
           {waitingForNext && (
             <button

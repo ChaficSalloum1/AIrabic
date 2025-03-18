@@ -13,7 +13,8 @@ export interface Exercise {
     | "Recognition"
     | "FillBlank"
     | "SentenceArrangement"
-    | "SentenceConstruction";
+    | "SentenceConstruction"
+    | "SentenceTyping";
   prompt: string;
   options?: string[];
   answer: string;
@@ -54,6 +55,12 @@ export const lessons: Lesson[] = [
         options: ["أنا", "بحب", "القهوة"],
         answer: "أنا بحب القهوة",
         hint: "Start with 'I' (أنا), then add the verb 'love' (بحب), and end with 'coffee' (القهوة)",
+      },
+      {
+        type: "SentenceTyping",
+        prompt: "Type the sentence: 'I love coffee'",
+        answer: "أنا بحب القهوة",
+        hint: "Start with 'أنا' (I) then verb 'بحب' (love)",
       },
     ],
     nextLessonId: "2",
