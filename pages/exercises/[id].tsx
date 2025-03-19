@@ -1,12 +1,13 @@
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { MobileNav } from '../../components/ui/MobileNav';
-import { MultipleChoice } from '../../components/exercises/MultipleChoice';
-import { FillBlank } from '../../components/exercises/FillBlank';
-import { Arrangement } from '../../components/exercises/Arrangement';
 import { getExerciseById, getExercisesByLessonId } from '../../data/exercises';
 import { ProgressManager } from '../../lib/localStorage';
+import MultipleChoice from '../../components/exercises/MultipleChoice';
+import FillBlank from '../../components/exercises/FillBlank';
+import Arrangement from '../../components/exercises/Arrangement';
+import Construction from '../../components/exercises/Construction';
+import MobileNav from '../../components/ui/MobileNav';
 import styles from '../../styles/Exercise.module.css';
 
 const ExercisePage = () => {
@@ -57,18 +58,43 @@ const ExercisePage = () => {
       
       <div className={styles.content}>
         {exercise.type === 'recognition' && (
-          <MultipleChoice exercise={exercise} onComplete={handleComplete} />
+          <MultipleChoice 
+            question={exercise.prompt}
+            options={exercise.options || []}
+            correctAnswer={exercise.answer}
+            onCorrect={() => handleComplete(true)}
+          />
         )}
         {exercise.type === 'fillBlank' && (
-          <FillBlank exercise={exercise} onComplete={handleComplete} />
+          <FillBlank 
+            prompt={exercise.prompt}
+            options={exercise.options || []}
+            answer={exercise.answer}
+            hint={exercise.hint}
+            onCorrect={() => handleComplete(true)}
+          />
         )}
         {exercise.type === 'arrangement' && (
-          <Arrangement exercise={exercise} onComplete={handleComplete} />
+          <Arrangement 
+            prompt={exercise.prompt}
+            options={exercise.options || []}
+            answer={exercise.answer}
+            onCorrect={() => handleComplete(true)}
+          />
         )}
-        {showReinforcement && exercise.reinforcement && (
+        {exercise.type === 'construction' && (
+          <Construction 
+            prompt={exercise.prompt}
+            options={exercise.options || []}
+            answer={exercise.answer}
+            hint={exercise.hint}
+            onCorrect={() => handleComplete(true)}
+          />
+        )}
+        {showReinforcement && (
           <div className={styles.reinforcement}>
             <h3>Let's practice this concept again:</h3>
-            <p>{exercise.reinforcement}</p>
+            <p>{exercise.hint}</p>
           </div>
         )}
       </div>
