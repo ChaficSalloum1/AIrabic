@@ -1,0 +1,68 @@
+We need to properly map out and set up our **lesson architecture** according to our **Lebanese Arabic learning platform PRD** and overwrite the placeholder content with our **actual structured lessons and exercises.**
+
+### **📌 Objective:**
+1️⃣ **Replace all placeholder lessons & exercises** (e.g., “Greetings” and “Food & Dining”) with our structured Lebanese Arabic lessons.
+2️⃣ **Ensure lesson architecture matches our PRD** for modular, scalable growth.
+3️⃣ **Dynamically load lesson content in `pages/lessons/[id].tsx`** from a central data file.
+4️⃣ **Validate that exercises load correctly within each lesson** and follow a logical learning progression.
+
+---
+
+### **📂 Folder & Architecture Overview:**
+✅ `data/lessons.ts` → Stores **all lesson and exercise data** (to be fully replaced with our lessons).  
+✅ `lib/types.ts` → Ensures type safety for lessons and exercises.  
+✅ `pages/lessons/[id].tsx` → Dynamically loads **lesson data based on ID**.  
+✅ `components/exercises/` → Stores **modular exercise components**.  
+✅ `lib/localStorage.ts` → Tracks user progress across lessons.
+
+---
+
+### **🔹 New Lesson Plan (to Overwrite Placeholder Content):**
+✅ **Lesson 1: Basic Sentence Structure**
+- Multiple Choice: Sentence word order
+- Fill in the Blank: Subject-Verb-Object order
+- Sentence Arrangement: Drag-and-drop sentence building
+- Sentence Construction: Choose words from a word bank
+- Sentence Typing: Type full sentences in Lebanese Arabic
+
+✅ **Lesson 2: Negation & Questions**
+- Multiple Choice: "I don’t like coffee" structure
+- Fill in the Blank: Negation with "ما"
+- Sentence Arrangement: Negative sentence formation
+- Sentence Construction: Question formation
+- Sentence Typing: Type "Do you like coffee?" in Lebanese Arabic
+
+✅ **Lesson 3: Present Tense Verbs**
+- Multiple Choice: Correct present-tense verb forms
+- Fill in the Blank: Conjugate verbs correctly
+- Sentence Arrangement: Arrange correct present-tense sentences
+- Sentence Construction: Build full present-tense sentences
+- Sentence Typing: Type "He drinks coffee" in Lebanese Arabic
+
+✅ **Lesson 4: Future & Past Tense**
+- Multiple Choice: "I will go" vs. "I went"
+- Fill in the Blank: Future & past markers
+- Sentence Arrangement: Build sentences with correct verb tense
+- Sentence Construction: Pick correct words for past/future meaning
+- Sentence Typing: Type "She went home" in Lebanese Arabic
+
+---
+
+### **🚀 Tasks for Replit AI:**
+1️⃣ **Delete all placeholder lessons and replace them with our structured lessons** in `data/lessons.ts`.  
+2️⃣ **Ensure `pages/lessons/[id].tsx` dynamically loads our lessons.**  
+3️⃣ **Validate that `components/exercises/` properly renders each exercise within a lesson.**  
+4️⃣ **Ensure lesson progression logic works** (completing a lesson unlocks the next).  
+5️⃣ **Check UI matches our structure** (lesson navigation & layout improvements).  
+
+---
+
+### **📌 Deliverables:**
+✅ **Cleaned & updated `data/lessons.ts` with our structured lessons.**  
+✅ **Updated `pages/lessons/[id].tsx` to correctly load lesson content dynamically.**  
+✅ **Verified exercise rendering logic** (all exercises should load properly).  
+✅ **Improved UI flow** to match our PRD & best practices.  
+
+---
+
+🔥 **Execute these tasks step by step and validate the output at each stage.** If an issue arises, provide debugging insights.
