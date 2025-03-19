@@ -1,5 +1,15 @@
+import { Exercise, getExercisesByLessonId } from './exercises';
 
-import { Lesson } from '../lib/types';
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+  order: number;
+  examples: string[];
+  nextLessonId?: string;
+  exercises: Exercise[];
+}
 
 export const lessons: Lesson[] = [
   {
@@ -18,7 +28,8 @@ Key points:
       "هي بتشرب شاي (She drinks tea)",
       "إنت بتاكل خبز (You eat bread)"
     ],
-    nextLessonId: "2"
+    nextLessonId: "2",
+    exercises: getExercisesByLessonId("1")
   },
   {
     id: "2",
@@ -36,7 +47,8 @@ Key points:
       "بتحب القهوة؟ (Do you like coffee?)",
       "شو بتشرب؟ (What do you drink?)"
     ],
-    nextLessonId: "3"
+    nextLessonId: "3",
+    exercises: getExercisesByLessonId("2")
   },
   {
     id: "3",
@@ -54,7 +66,8 @@ Key points:
       "بتكتب (You write)",
       "بيكتب (He writes)"
     ],
-    nextLessonId: "4"
+    nextLessonId: "4",
+    exercises: getExercisesByLessonId("3")
   },
   {
     id: "4",
@@ -71,7 +84,8 @@ Key points:
       "رح روح (I will go)",
       "رحت (I went)",
       "بكرا رح اجي (Tomorrow I will come)"
-    ]
+    ],
+    exercises: getExercisesByLessonId("4")
   }
 ];
 
