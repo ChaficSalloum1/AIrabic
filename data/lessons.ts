@@ -1,78 +1,84 @@
-export interface Lesson {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  examples: string[];
-  exercises: Exercise[];
-  nextLessonId?: string;
-}
 
-export interface Exercise {
-  type:
-    | "Recognition"
-    | "FillBlank"
-    | "SentenceArrangement"
-    | "SentenceConstruction"
-    | "SentenceTyping";
-  prompt: string;
-  options?: string[];
-  answer: string;
-  hint?: string;
-}
+import { Lesson } from '../lib/types';
 
 export const lessons: Lesson[] = [
   {
     id: "1",
     title: "Basic Sentence Structure",
-    description: "Learn how to form simple sentences in Lebanese Arabic",
-    content: "Lebanese Arabic follows Subject-Verb-Object (SVO) order...",
-    examples: ["أنا بحب القهوة - Ana bḥeb l-ahwe (I love coffee)"],
-    exercises: [
-      {
-        type: "Recognition",
-        prompt:
-          "Which sentence follows the correct Lebanese Arabic word order?",
-        options: ["أنا بحب القهوة", "القهوة أنا بحب", "بحب أنا القهوة"],
-        answer: "أنا بحب القهوة",
-      },
-      {
-        type: "SentenceTyping",
-        prompt: "Type the sentence: I love coffee",
-        answer: "أنا بحب القهوة",
-        hint: "Start with 'أنا' (I) then verb 'بحب' (love)",
-      },
-      {
-        type: "FillBlank",
-        prompt: "Complete the sentence: ___ بحب القهوة",
-        options: ["أنا", "نحن", "هي"],
-        answer: "أنا",
-        hint: "This word means 'I' in Lebanese Arabic",
-      },
-      {
-        type: "SentenceArrangement",
-        prompt: "Arrange the words in the correct order:",
-        options: ["القهوة", "بحب", "أنا"],
-        answer: "أنا بحب القهوة",
-      },
-      {
-        type: "SentenceConstruction",
-        prompt: "Build the sentence: 'I love coffee'",
-        options: ["أنا", "بحب", "القهوة"],
-        answer: "أنا بحب القهوة",
-        hint: "Start with 'I' (أنا), then add the verb 'love' (بحب), and end with 'coffee' (القهوة)",
-      },
-      {
-        type: "SentenceTyping",
-        prompt: "Type the sentence: 'I love coffee'",
-        answer: "أنا بحب القهوة",
-        hint: "Start with 'أنا' (I) then verb 'بحب' (love)",
-      },
+    description: "Learn the fundamental word order in Lebanese Arabic sentences",
+    content: `In Lebanese Arabic, sentences typically follow Subject-Verb-Object (SVO) order, similar to English. This makes it easier for English speakers to understand and construct basic sentences.
+
+Key points:
+- Subject comes first (أنا، إنت، هي)
+- Verb follows the subject (بحب، بشرب)
+- Object comes last (قهوة، شاي)`,
+    order: 1,
+    examples: [
+      "أنا بحب القهوة (I love coffee)",
+      "هي بتشرب شاي (She drinks tea)",
+      "إنت بتاكل خبز (You eat bread)"
     ],
-    nextLessonId: "2",
+    nextLessonId: "2"
   },
+  {
+    id: "2",
+    title: "Negation & Questions",
+    description: "Learn how to form negative sentences and questions",
+    content: `Lebanese Arabic uses a unique negation structure with ما...ش around the verb. Questions can be formed by changing intonation or using question words.
+
+Key points:
+- Negation: ما + verb + ش
+- Questions can use rising intonation
+- Question words come at the start`,
+    order: 2,
+    examples: [
+      "ما بحبش القهوة (I don't love coffee)",
+      "بتحب القهوة؟ (Do you like coffee?)",
+      "شو بتشرب؟ (What do you drink?)"
+    ],
+    nextLessonId: "3"
+  },
+  {
+    id: "3",
+    title: "Present Tense Verbs",
+    description: "Master the present tense in Lebanese Arabic",
+    content: `Present tense in Lebanese Arabic uses the ب prefix before verbs. This makes it easy to identify and form present tense sentences.
+
+Key points:
+- ب prefix indicates present tense
+- Conjugation changes based on subject
+- Regular patterns make learning easier`,
+    order: 3,
+    examples: [
+      "بكتب (I write)",
+      "بتكتب (You write)",
+      "بيكتب (He writes)"
+    ],
+    nextLessonId: "4"
+  },
+  {
+    id: "4",
+    title: "Future & Past Tense",
+    description: "Learn to express actions in the future and past",
+    content: `Lebanese Arabic marks future tense with رح and past tense with verb conjugation. Understanding these tenses helps express time clearly.
+
+Key points:
+- Future: رح + present tense verb
+- Past: special verb conjugation
+- Time expressions help clarify meaning`,
+    order: 4,
+    examples: [
+      "رح روح (I will go)",
+      "رحت (I went)",
+      "بكرا رح اجي (Tomorrow I will come)"
+    ]
+  }
 ];
 
 export const getLessonById = (id: string): Lesson | undefined => {
-  return lessons.find((lesson) => lesson.id === id);
+  return lessons.find(lesson => lesson.id === id);
+};
+
+export const getAllLessons = (): Lesson[] => {
+  return lessons.sort((a, b) => a.order - b.order);
 };

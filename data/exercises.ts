@@ -1,4 +1,4 @@
-import { Lesson } from './lessons';
+import { Exercise } from '../lib/types';
 
 export type ExerciseType = 'recognition' | 'fillBlank' | 'arrangement' | 'construction';
 
@@ -15,12 +15,12 @@ export interface Exercise {
 }
 
 export const exercises: Exercise[] = [
-  // Lesson 1 Exercises
+  // Lesson 1: Basic Sentence Structure
   {
     id: "1.1",
     lessonId: "1",
     type: "recognition",
-    title: "Choose the Correct Order",
+    title: "Word Order",
     prompt: "Which sentence follows Lebanese Arabic word order?",
     options: [
       "أنا بحب القهوة (I love coffee)",
@@ -40,6 +40,16 @@ export const exercises: Exercise[] = [
     answer: "أنا",
     hint: "Which word means 'I'?",
     order: 2
+  },
+  {
+    id: "1.3",
+    lessonId: "1",
+    type: "arrangement",
+    title: "Arrange the Sentence",
+    prompt: "Arrange these words to form 'I drink coffee'",
+    options: ["القهوة", "أنا", "بشرب"],
+    answer: "أنا بشرب القهوة",
+    order: 3
   },
   // Lesson 2 Exercises
   {
