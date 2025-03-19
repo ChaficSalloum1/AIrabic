@@ -125,7 +125,8 @@ export default function LessonPage() {
         )}
 
       {/* ✅ Show "Next Lesson" button only when all exercises are completed */}
-      {lesson.nextLessonId &&
+      {lesson?.nextLessonId &&
+        lesson?.exercises &&
         completedExercises.length === lesson.exercises.length && (
           <button
             className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
