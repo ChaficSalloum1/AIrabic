@@ -1,140 +1,98 @@
+// pages/lessons/[id].tsx
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { getLessonById, Lesson } from "../../data/lessons";
-import MultipleChoice from "../../components/exercises/MultipleChoice";
-import FillBlank from "../../components/exercises/FillBlank";
-import SentenceArrangement from "../../components/exercises/SentenceArrangement";
-import SentenceConstruction from "../../components/exercises/SentenceConstruction";
-import SentenceTyping from "../../components/exercises/SentenceTyping";
-import { ProgressManager } from "../../lib/localStorage";
+import { getExercisesByLessonId } from "../../data/exercises";
+import { ExerciseComponent } from "../../components/ExerciseComponent";
+import { Exercise } from "../../lib/types";
 
-export default function LessonPage() {
+const LessonPage: React.FC = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [completedExercises, setCompletedExercises] = useState<string[]>([]);
+  const { id: lessonId } = router.query;
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [waitingForNext, setWaitingForNext] = useState(false);
+  const [completed, setCompleted] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ Load lesson data when the ID changes
   useEffect(() => {
-    if (id) {
-      const foundLesson = getLessonById(id as string);
-      if (foundLesson) {
-        setLesson(foundLesson);
-        setCompletedExercises(
-          ProgressManager.getCompletedExercises(foundLesson.id) || [],
-        );
-      }
+    if (lessonId && typeof lessonId === "string") {
+      // Fetch exercises for this lesson
+      const lessonExercises = getExercisesByLessonId(lessonId);
+      setExercises(lessonExercises);
+      setCurrentExerciseIndex(0);
+      setCompleted([]);
       setIsLoading(false);
     }
-  }, [id]);
+  }, [lessonId]);
 
-  if (isLoading) return <div className="text-center p-4">جار التحميل...</div>;
-  if (!lesson)
-    return <p className="text-center text-red-500">لم يتم العثور على الدرس</p>;
-
-  // ✅ Handle exercise completion
-  const handleExerciseComplete = () => {
-    setWaitingForNext(true);
-  };
-
-  // ✅ Move to the next exercise
-  const handleNext = () => {
-    setWaitingForNext(false);
-    setCompletedExercises([
-      ...completedExercises,
-      lesson.exercises[currentExerciseIndex].type,
-    ]);
-    ProgressManager.saveCompletedExercise(
-      lesson.id,
-      lesson.exercises[currentExerciseIndex].type,
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="spinner-border text-primary" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
     );
+  }
 
-    if (currentExerciseIndex < lesson.exercises.length - 1) {
+  if (exercises.length === 0) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
+          <p>No exercises found for this lesson.</p>
+        </div>
+        <button
+          onClick={() => router.push("/lessons")}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Back to Lessons
+        </button>
+      </div>
+    );
+  }
+
+  const currentExercise = exercises[currentExerciseIndex];
+
+  const handleComplete = () => {
+    setCompleted([...completed, currentExercise.id]);
+
+    // Move to next exercise or finish lesson
+    if (currentExerciseIndex < exercises.length - 1) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
+    } else {
+      // All exercises completed
+      router.push(`/lessons/${lessonId}/complete`);
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{lesson.title}</h1>
-      <p className="text-lg mb-4">{lesson.description}</p>
-      <div className="prose mb-8">{lesson.content}</div>
+  const progress = ((completed.length / exercises.length) * 100).toFixed(0);
 
-      <div className="bg-gray-100 rounded-lg p-4 mb-8">
-        <h2 className="text-lg font-semibold mb-2">أمثلة:</h2>
-        {lesson.examples.map((example, index) => (
-          <p key={index} className="text-md italic mb-2" dir="rtl">
-            {example}
-          </p>
-        ))}
+  return (
+    <div className="container mx-auto p-4">
+      {/* Progress bar */}
+      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+        <div
+          className="bg-blue-600 h-2.5 rounded-full"
+          style={{ width: `${progress}%` }}
+        ></div>
       </div>
 
-      <h2 className="text-xl font-bold mb-4">تمارين</h2>
+      {/* Exercise counter */}
+      <div className="text-sm text-gray-600 mb-4">
+        Exercise {currentExerciseIndex + 1} of {exercises.length}
+      </div>
 
-      {/* ✅ Only show the current exercise */}
-      {lesson?.exercises?.length > 0 &&
-        lesson.exercises[currentExerciseIndex] && (
-          <div className="mb-6">
-            {lesson.exercises[currentExerciseIndex].type ===
-              "MultipleChoice" && (
-              <MultipleChoice
-                {...lesson.exercises[currentExerciseIndex]}
-                onCorrect={handleExerciseComplete}
-              />
-            )}
-            {lesson.exercises[currentExerciseIndex].type === "FillBlank" && (
-              <FillBlank
-                {...lesson.exercises[currentExerciseIndex]}
-                onCorrect={handleExerciseComplete}
-              />
-            )}
-            {lesson.exercises[currentExerciseIndex].type ===
-              "SentenceArrangement" && (
-              <SentenceArrangement
-                {...lesson.exercises[currentExerciseIndex]}
-                onCorrect={handleExerciseComplete}
-              />
-            )}
-            {lesson.exercises[currentExerciseIndex].type ===
-              "SentenceConstruction" && (
-              <SentenceConstruction
-                {...lesson.exercises[currentExerciseIndex]}
-                onCorrect={handleExerciseComplete}
-              />
-            )}
-            {lesson.exercises[currentExerciseIndex].type ===
-              "SentenceTyping" && (
-              <SentenceTyping
-                {...lesson.exercises[currentExerciseIndex]}
-                onCorrect={handleExerciseComplete}
-              />
-            )}
+      {/* Exercise title */}
+      <h2 className="text-xl font-bold mb-6">{currentExercise.title}</h2>
 
-            {waitingForNext && (
-              <button
-                className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600"
-                onClick={handleNext}
-              >
-                التالي →
-              </button>
-            )}
-          </div>
-        )}
-
-      {/* ✅ Show "Next Lesson" button only when all exercises are completed */}
-      {lesson?.nextLessonId &&
-        lesson?.exercises &&
-        completedExercises.length === lesson.exercises.length && (
-          <button
-            className="mt-8 px-6 py-3 bg-blue-600 text-white text-lg rounded-md shadow-md hover:bg-blue-700"
-            onClick={() => router.push(`/lessons/${lesson.nextLessonId}`)}
-          >
-            Next Lesson →
-          </button>
-        )}
+      {/* Exercise component */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <ExerciseComponent
+          exercise={currentExercise}
+          onComplete={handleComplete}
+        />
+      </div>
     </div>
   );
-}
+};
+
+export default LessonPage;

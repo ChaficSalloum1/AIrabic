@@ -1,18 +1,14 @@
+// data/exercises.ts
+import React from 'react'; // Need to import React when using JSX
 import { Exercise } from '../lib/types';
+import { MultipleChoice } from '../components/exercises/MultipleChoice';
+import { FillBlank } from '../components/exercises/FillBlank';
+import { SentenceArrangement } from '../components/exercises/SentenceArrangement';
 
 export type ExerciseType = 'recognition' | 'fillBlank' | 'arrangement' | 'construction';
 
-export interface Exercise {
-  id: string;
-  lessonId: string;
-  type: ExerciseType;
-  title: string;
-  prompt: string;
-  options?: string[];
-  answer: string;
-  hint?: string;
-  order: number;
-}
+// Your Exercise interface should be imported from lib/types, not redefined here
+// If you need to define it here, make sure it doesn't conflict with the imported one
 
 export const exercises: Exercise[] = [
   // Lesson 1: Basic Sentence Structure
