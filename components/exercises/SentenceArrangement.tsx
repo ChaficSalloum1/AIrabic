@@ -33,13 +33,10 @@ export const SentenceArrangement: React.FC<SentenceArrangementProps> = ({
     setSelectedWords([...selectedWords, word]);
     setAvailableWords(availableWords.filter((w) => w !== word));
 
-    // Check if complete
+    // Check if complete automatically when last word is added
     const newSelected = [...selectedWords, word];
     if (newSelected.length === words.length) {
-      if (newSelected.join(" ") === correctAnswer) {
-        setIsCorrect(true);
-        onCorrect();
-      }
+      checkAnswer(newSelected);
     }
   };
 
@@ -56,14 +53,17 @@ export const SentenceArrangement: React.FC<SentenceArrangementProps> = ({
   };
 
   // Check the answer
-  const checkAnswer = () => {
-    if (selectedWords.length !== words.length) return;
+  const checkAnswer = (selectedWordsToCheck = selectedWords) => {
+    if (selectedWordsToCheck.length !== words.length) return;
 
-    const isAnswerCorrect = selectedWords.join(" ") === correctAnswer;
-    setIsCorrect(isAnswerCorrect);
+    const isAnswerCorrect = selectedWordsToCheck.join(" ") === correctAnswer;
 
     if (isAnswerCorrect) {
-      onCorrect();
+      setIsCorrect(true);
+      // Using exactly 1000ms delay like in MultipleChoice component
+      setTimeout(() => {
+        onCorrect();
+      }, 1000);
     }
   };
 
@@ -76,81 +76,149 @@ export const SentenceArrangement: React.FC<SentenceArrangementProps> = ({
     setIsCorrect(false);
   };
 
-  // Fallback styles if CSS modules aren't working
-  const containerStyle = {
-    width: "100%",
-    maxWidth: "600px",
-    margin: "0 auto",
-  };
+  return (
+    <div className={styles.exercise || "exercise-container"}>
+      <h3 className="text-lg font-semibold mb-2 text-right">
+        :Arrange the words in the correct order
+      </h3>
 
-  const instructionStyle = {
-    fontSize: "1.125rem",
-    fontWeight: "600",
-    marginBottom: "0.5rem",
-    textAlign: "right" as const,
-  };
+      {/* Selected words area */}
+      <div
+        className={`border-2 ${isCorrect ? 'border-green-500 bg-green-50' : 'border-gray-200'} rounded-lg p-4 mb-4 min-h-16 bg-white`}
+        dir="rtl"
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "8px",
+          }}
+        >
+          {selectedWords.length === 0 ? (
+            <div className="text-gray-400 w-full text-center">
+              Tap words below to arrange them
+            </div>
+          ) : (
+            selectedWords.map((word, index) => (
+              <div
+                key={index}
+                onClick={() => handleRemoveWord(index)}
+                style={{
+                  display: "inline-block",
+                  padding: "8px 16px",
+                  margin: "4px",
+                  fontSize: "18px",
+                  fontWeight: "500",
+                  backgroundColor: isCorrect ? "#22c55e" : "white",
+                  color: isCorrect ? "white" : "black",
+                  border: `2px solid ${isCorrect ? "#16a34a" : "#60a5fa"}`,
+                  borderRadius: "8px",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                  cursor: "pointer",
+                }}
+              >
+                {word}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
-  const selectedAreaStyle = {
-    border: "2px solid #e2e8f0",
-    borderRadius: "0.5rem",
-    padding: "1rem",
-    marginBottom: "1rem",
-    minHeight: "4rem",
-    backgroundColor: "white",
-  };
+      {/* Available words */}
+      <div className={`border rounded-lg p-4 ${isCorrect ? 'bg-gray-50 opacity-50' : 'bg-gray-100'}`} dir="rtl">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "8px",
+          }}
+        >
+          {availableWords.map((word, index) => (
+            <div
+              key={index}
+              onClick={() => handleSelectWord(word)}
+              style={{
+                display: "inline-block",
+                padding: "8px 16px",
+                margin: "4px",
+                fontSize: "18px",
+                fontWeight: "500",
+                backgroundColor: "white",
+                border: "2px solid #d1d5db",
+                borderRadius: "8px",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                cursor: isCorrect ? "default" : "pointer",
+                opacity: isCorrect ? "0.7" : "1",
+              }}
+            >
+              {word}
+            </div>
+          ))}
+        </div>
+      </div>
 
-  const wordsAreaStyle = {
-    border: "1px solid #e2e8f0",
-    borderRadius: "0.5rem",
-    padding: "1rem",
-    backgroundColor: "#f8fafc",
-  };
+      {/* Feedback message - Using the same style as MultipleChoice */}
+      {isCorrect && (
+        <div className={`${styles.feedback || "mt-4 p-3 rounded"} ${styles.correct || "bg-green-100 text-green-700 border border-green-200"}`}>
+          ✅ Correct!
+        </div>
+      )}
 
-  const flexWrapStyle = {
-    display: "flex",
-    flexDirection: "row" as const,
-    flexWrap: "wrap" as const,
-    gap: "0.5rem",
-  };
+      {/* Buttons */}
+      <div className="flex justify-center gap-2 mt-4">
+        {selectedWords.length > 0 && (
+          <button
+            onClick={() => checkAnswer()}
+            disabled={isCorrect || selectedWords.length !== words.length}
+            style={{
+              padding: "8px 16px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              backgroundColor: isCorrect
+                ? "#22c55e"
+                : selectedWords.length === words.length
+                ? "#2563eb"
+                : "#d1d5db",
+              color:
+                isCorrect || selectedWords.length === words.length
+                  ? "white"
+                  : "#6b7280",
+              borderRadius: "8px",
+              border: "none",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+              cursor:
+                selectedWords.length === words.length && !isCorrect
+                  ? "pointer"
+                  : "default",
+            }}
+          >
+            {isCorrect ? "Correct! ✓" : "Check Answer"}
+          </button>
+        )}
 
-  const wordStyle = {
-    display: "inline-block",
-    padding: "0.5rem 1rem",
-    margin: "0.25rem",
-    fontSize: "1.125rem",
-    fontWeight: "500",
-    backgroundColor: "white",
-    border: "2px solid #d1d5db",
-    borderRadius: "0.5rem",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
-    cursor: "pointer",
-  };
+        {selectedWords.length > 0 && !isCorrect && (
+          <button
+            onClick={resetExercise}
+            style={{
+              padding: "8px 16px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              backgroundColor: "#e5e7eb",
+              color: "#4b5563",
+              borderRadius: "8px",
+              border: "none",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+              cursor: "pointer",
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
-  const selectedWordStyle = {
-    ...wordStyle,
-    border: isCorrect ? "2px solid #10b981" : "2px solid #60a5fa",
-    backgroundColor: isCorrect ? "#d1fae5" : "white",
-    color: isCorrect ? "#065f46" : "inherit",
-  };
-
-  const buttonContainerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    gap: "0.5rem",
-    marginTop: "1rem",
-  };
-
-  const checkButtonStyle = {
-    padding: "0.5rem 1rem",
-    fontSize: "1rem",
-    fontWeight: "bold",
-    backgroundColor: isCorrect
-      ? "#10b981"
-      : selectedWords.length === words.length
-      ? "#3b82f6"
-      : "#d1d5db",
-    color:
-      isCorrect || selectedWords.length === words.length
-        ? "white"
-        : "#6b7280",
-    borderRadius: "0.5rem",
+export default SentenceArrangement;

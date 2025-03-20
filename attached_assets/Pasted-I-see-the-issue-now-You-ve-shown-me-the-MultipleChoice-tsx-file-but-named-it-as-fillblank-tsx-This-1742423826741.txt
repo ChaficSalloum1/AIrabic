@@ -1,3 +1,16 @@
+I see the issue now. You've shown me the MultipleChoice.tsx file but named it as fillblank.tsx. This mismatch is causing confusion in your app. Let me help you fix this:
+
+1. The file you showed me contains the MultipleChoice component, not the FillBlank component. This is likely causing your error.
+
+2. You need to create a proper FillBlank.tsx file in your exercises folder. Here's what you should do:
+
+   - Create a new file called `FillBlank.tsx` in your `components/exercises` folder
+   - Copy the code below into that file
+   - Make sure the component name and exports match (FillBlank, not MultipleChoice)
+
+Here's the correct code for your FillBlank.tsx file:
+
+```typescript
 import React, { useState, useRef, useEffect } from "react";
 import styles from './Exercise.module.css';
 
@@ -141,3 +154,6 @@ export const FillBlank: React.FC<Props> = ({
 
 // Add default export
 export default FillBlank;
+```
+
+The key issue was that your file named as fillblank.tsx actually contained the MultipleChoice component. This mismatch between filename and component is what's causing the error. Make sure the file name matches the component it contains.

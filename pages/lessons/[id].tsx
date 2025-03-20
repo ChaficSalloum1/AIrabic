@@ -1,8 +1,7 @@
-// pages/lessons/[id].tsx
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getExercisesByLessonId } from "../../data/exercises";
-import { ExerciseComponent } from "../../components/ExerciseComponent";
+import ExerciseComponent from "../../components/ExerciseComponent";
 import { Exercise } from "../../lib/types";
 
 const LessonPage: React.FC = () => {
@@ -66,31 +65,25 @@ const LessonPage: React.FC = () => {
 
   const progress = ((completed.length / exercises.length) * 100).toFixed(0);
 
+  // In your render method of LessonPage
   return (
     <div className="container mx-auto p-4">
-      {/* Progress bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-        <div
-          className="bg-blue-600 h-2.5 rounded-full"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
+      {/* Simplify to isolate the error */}
+      <h2 className="text-xl font-bold mb-6">
+        {currentExercise ? currentExercise.title : "No exercise title"}
+      </h2>
 
-      {/* Exercise counter */}
-      <div className="text-sm text-gray-600 mb-4">
-        Exercise {currentExerciseIndex + 1} of {exercises.length}
-      </div>
-
-      {/* Exercise title */}
-      <h2 className="text-xl font-bold mb-6">{currentExercise.title}</h2>
-
-      {/* Exercise component */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <ExerciseComponent
-          exercise={currentExercise}
-          onComplete={handleComplete}
-        />
-      </div>
+      {/* Render the exercise component with a safety check */}
+      {currentExercise ? (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <ExerciseComponent
+            exercise={currentExercise}
+            onComplete={handleComplete}
+          />
+        </div>
+      ) : (
+        <div>No exercise data available</div>
+      )}
     </div>
   );
 };
